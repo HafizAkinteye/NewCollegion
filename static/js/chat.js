@@ -67,7 +67,6 @@ function getUsers(senderId, callback) {
 function register(username, password) {
     $.post('/api/users/', '{"username": "' + username + '", "password": "' + password + '"}',
         function (data) {
-            console.log(data);
             window.location = '/';
         }).fail(function (response) {
             $('#id_username').addClass('invalid');
