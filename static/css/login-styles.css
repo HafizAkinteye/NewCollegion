@@ -1,0 +1,15 @@
+.errorbox {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 1vw;
+    line-height: 1.6vw;
+    margin-bottom: 2px;
+    color: #FFFFFF;
+    text-align: center;
+    background: #FF0000;
+}
+
+.error-msg{
+    margin: 0.75vh auto 0.75vh auto;
+}
