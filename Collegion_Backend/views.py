@@ -42,7 +42,8 @@ def user_list(request, pk=None):
         data = JSONParser().parse(request)
         try:
             user = User.objects.create_user(username=data['username'], password=data['password'])
-            UserProfile.objects.create(user=user)
+            user.save()
+
             return JsonResponse(data, status=201)
         except Exception:
             return JsonResponse({'error': "Something went wrong"}, status=400)
