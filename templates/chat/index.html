@@ -7,6 +7,7 @@
 
         <link type="text/css" rel="stylesheet" href="{% static 'css/materialize.min.css' %}"  media="screen,projection"/>
         <link type="text/css" rel="stylesheet" href="{% static 'css/style.css' %}"  media="screen,projection"/>
+        <link rel="stylesheet" href="{% static 'css/login-styles.css' %}">
 
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
@@ -20,14 +21,6 @@
             <div class="container white-text center-align text">
             <h2>Collegion</h2>
             <p>Welcome to Collegion: Anonymous chatting</p>
-            <div class="chip">
-                <img src="https://opbeat.com/docs/static/images/stacks/logo_django_alt.svg" class="white">
-                Django
-            </div>
-            <div class="chip">
-                <img src="http://materializecss.com/res/materialize.svg" class="white">
-                MaterializeCSS
-            </div>
             </div>
         </div>
         <div class="container">
@@ -39,6 +32,11 @@
                     <h3>
                     Login
                     </h3>
+                    {% if error %}
+                        <div class="errorbox">
+                            <p class="error-msg">{{ error }}</p>
+                        </div>
+                    {% endif %}
                     <form id="login-form" class="form-group" method="post">
                         {% csrf_token %}
                         <div class="row">
