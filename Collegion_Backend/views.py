@@ -8,6 +8,7 @@ from rest_framework.parsers import JSONParser
 from Collegion_Backend.models import Message                                                   # Our Message model
 from Collegion_Backend.serializers import MessageSerializer, UserSerializer # Our Serializer Classes
 from django.http import HttpResponse
+from django.core.mail import EmailMessage
 
 def index(request):
     if request.user.is_authenticated:
@@ -41,7 +42,18 @@ def user_list(request, pk=None):
         data = JSONParser().parse(request)
         try:
             user = User.objects.create_user(username=data['username'], password=data['password'])
+            user.is_active = False
             user.save()
+            email_subject = 'Account verification needed'
+            email_body = 'Test body'
+            email = EmailMessage
+            (
+                email_subject,
+                email_body,
+                'noreply@collegion.com'
+                'saifrock619@gmail.com'
+            )
+            email.send(fail_silently= False)
 
             return JsonResponse(data, status=201)
         except Exception:
