@@ -8,7 +8,9 @@ from rest_framework.parsers import JSONParser
 from Collegion_Backend.models import Message                                                   # Our Message model
 from Collegion_Backend.serializers import MessageSerializer, UserSerializer # Our Serializer Classes
 from django.http import HttpResponse
-from django.core.mail import EmailMessage
+from django.core.mail import send_mail
+from django.conf import settings
+
 
 def index(request):
     if request.user.is_authenticated:
@@ -16,8 +18,8 @@ def index(request):
     if request.method == 'GET':
         return render(request, 'chat/index.html', {})
     if request.method == "POST":
-        username, email, password = request.POST['username'], request.POST['email'], request.POST['password']
-        user = authenticate(username=username, email = email, password=password)
+        username, password = request.POST['username'], request.POST['password']
+        user = authenticate(username=username, password=password)
         if user is not None:
             login(request, user)
         else:
@@ -41,20 +43,20 @@ def user_list(request, pk=None):
     elif request.method == 'POST':
         data = JSONParser().parse(request)
         try:
-            user = User.objects.create_user(username=data['username'], password=data['password'])
+            user = User.objects.create_user(username=data['username'], email = data['email'], password=data['password'])
             user.save()
             user.is_active = False
             
             email_subject = 'Account verification needed'
             email_body = 'Test body'
-            email = EmailMessage(
+            send_mail(
                 email_subject,
                 email_body,
-                'noreply@collegion.com'
-                'saifrock619@gmail.com'
+                'collegionapp@gmail.com',
+                ['saifrock619@gmail.com'],
+                fail_silently=False,
             )
-            email.send(fail_silently= False)
-
+            
             return JsonResponse(data, status=201)
         except Exception:
             return JsonResponse({'error': "Something went wrong"}, status=400)
