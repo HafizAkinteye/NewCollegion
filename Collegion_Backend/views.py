@@ -42,12 +42,12 @@ def user_list(request, pk=None):
         data = JSONParser().parse(request)
         try:
             user = User.objects.create_user(username=data['username'], password=data['password'])
-            user.is_active = False
             user.save()
+            user.is_active = False
+            
             email_subject = 'Account verification needed'
             email_body = 'Test body'
-            email = EmailMessage
-            (
+            email = EmailMessage(
                 email_subject,
                 email_body,
                 'noreply@collegion.com'
