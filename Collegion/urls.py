@@ -31,8 +31,9 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('register/', views.register_view, name='register'),
     path('chat/', views.chat_view, name='chats'),
+    path('chat/<int:sender>/<int:receiver>/', views.message_view, name='view_message'),
      # URL form : "/api/messages/1/2"
-    path('api/messages/<int:sender>/<int:receiver>', views.message_list, name='message-detail'),  # For GET request.
+    path('api/messages/<int:sender>/<int:receiver>/', views.message_list, name='message-detail'),  # For GET request.
     # URL form : "/api/messages/"
     path('api/messages/', views.message_list, name='message-list'),   # For POST
     # URL form "/api/users/1"
