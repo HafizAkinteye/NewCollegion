@@ -23,7 +23,7 @@ const text_box = '<div class="card-panel right" style="width: 75%; position: rel
     '</div>';
 
 function send(sender, receiver, message) {
-    $.post('/api/messages', '{"sender": "' + sender + '", "receiver": "' + receiver + '","message": "' + message + '" }', function (data) {
+    $.post('/api/messages/', '{"sender": "' + sender + '", "receiver": "' + receiver + '","message": "' + message + '" }', function (data) {
         console.log(data);
         var box = text_box.replace('{sender}', "You");
         box = box.replace('{message}', message);
@@ -33,7 +33,7 @@ function send(sender, receiver, message) {
 }
 
 function receive() {
-    $.get('/api/messages/' + sender_id + '/' + receiver_id, function (data) {
+    $.get('/api/messages/' + sender_id + '/' + receiver_id + '/', function (data) {
         console.log(data);
         if (data.length !== 0) {
             for (var i = 0; i < data.length; i++) {
