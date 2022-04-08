@@ -16,8 +16,8 @@ def index(request):
     if request.method == 'GET':
         return render(request, 'chat/index.html', {})
     if request.method == "POST":
-        username, password = request.POST['username'], request.POST['password']
-        user = authenticate(username=username, password=password)
+        username, email, password = request.POST['username'], request.POST['email'], request.POST['password']
+        user = authenticate(username=username, email = email, password=password)
         if user is not None:
             login(request, user)
         else:
