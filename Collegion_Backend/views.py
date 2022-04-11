@@ -8,6 +8,7 @@ from rest_framework.parsers import JSONParser
 from Collegion_Backend.models import Message                                                   # Our Message model
 from Collegion_Backend.serializers import MessageSerializer, UserSerializer # Our Serializer Classes
 from django.http import HttpResponse
+from django.core.mail import EmailMessage
 
 def index(request):
     if request.user.is_authenticated:
@@ -17,11 +18,10 @@ def index(request):
     if request.method == "POST":
         username, password = request.POST['username'], request.POST['password']
         user = authenticate(username=username, password=password)
-        print(user)
         if user is not None:
             login(request, user)
         else:
-            return HttpResponse('{"error": "User does not exist"}')
+            return HttpResponse(render(request, 'chat/index.html', {"error": "Password or Username was incorrect"}))
         return redirect('chats')
 
 
@@ -42,7 +42,19 @@ def user_list(request, pk=None):
         data = JSONParser().parse(request)
         try:
             user = User.objects.create_user(username=data['username'], password=data['password'])
-            UserProfile.objects.create(user=user)
+            user.save()
+            user.is_active = False
+            
+            email_subject = 'Account verification needed'
+            email_body = 'Test body'
+            email = EmailMessage(
+                email_subject,
+                email_body,
+                'noreply@collegion.com'
+                'saifrock619@gmail.com'
+            )
+            email.send(fail_silently= False)
+
             return JsonResponse(data, status=201)
         except Exception:
             return JsonResponse({'error': "Something went wrong"}, status=400)
