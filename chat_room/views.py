@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 
-from Collegion_Backend.models import Message
+from Collegion_Backend.models import GroupMessage
 from chat_room.models import ChatRoom
 from chat_room.serializers import ChatRoomMessageSerializer
 
@@ -20,11 +20,13 @@ def get_messages(request, chatroom_id):
         List all required messages, or create a new message.
         """
     if request.method == 'GET':
-        messages = Message.objects.filter(chat_room=chatroom_id, is_read=False).exclude(sender=request.user.id)
+        messages = GroupMessage.objects.filter(chat_room=chatroom_id).exclude(sender=request.user.id) \
+        .exclude(is_read=request.user.id)
+
+        for m in messages:
+            m.is_read.add(request.user)
+            m.save()
         serializer = ChatRoomMessageSerializer(messages, many=True, context={'request': request})
-        for message in messages:
-            message.is_read = True
-            message.save()
         return JsonResponse(serializer.data, safe=False)
 
 @csrf_exempt
@@ -46,7 +48,7 @@ def message_chat_view(request, chatroom_id):
                       {'chatroom_id': chatroom_id,
                        'is_chatroom': True,
                        'chatroom': ChatRoom.objects.all().filter(member=request.user.id),
-                       'messages': Message.objects.all().filter(chat_room=chatroom_id),
+                       'messages': GroupMessage.objects.all().filter(chat_room=chatroom_id),
                        'direct_messages': request.user.profile.dm_users.all()})
 
 def invite_to_chat_room(request):

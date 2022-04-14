@@ -1,9 +1,10 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
-from Collegion_Backend.models import Message, Profile
+from Collegion_Backend.models import DMMessage, Profile, GroupMessage
 
-admin.site.register(Message)
+admin.site.register(DMMessage)
+admin.site.register(GroupMessage)
 class ProfileInline(admin.StackedInline):
     model = Profile
     can_delete = False
