@@ -5,7 +5,7 @@ from django.contrib.auth.models import User                                # Dja
 from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
-from Collegion_Backend.models import Message, Profile                                                 # Our Message model
+from Collegion_Backend.models import DMMessage                                               # Our Message model
 from Collegion_Backend.serializers import MessageSerializer, UserSerializer # Our Serializer Classes
 from django.http import HttpResponse
 from django.core.mail import EmailMessage
@@ -67,7 +67,8 @@ def message_list(request, sender=None, receiver=None):
     List all required messages, or create a new message.
     """
     if request.method == 'GET':
-        messages = Message.objects.filter(sender_id=sender, receiver_id=receiver, is_read=False)
+        messages = DMMessage.objects.filter(sender_id=sender, receiver_id=receiver, is_read=False).exclude(sender=receiver)
+
         serializer = MessageSerializer(messages, many=True, context={'request': request})
         for message in messages:
             message.is_read = True
@@ -126,6 +127,6 @@ def message_view(request, sender, receiver):
                       {'users': User.objects.exclude(username=request.user.username), #List of users
                        'receiver': User.objects.get(id=receiver),
                        'chatroom': ChatRoom.objects.all().filter(member=request.user.id),
-                       'messages': Message.objects.filter(sender_id=sender, receiver_id=receiver) |
-                                   Message.objects.filter(sender_id=receiver, receiver_id=sender),
+                       'messages': DMMessage.objects.filter(sender_id=sender, receiver_id=receiver) |
+                                   DMMessage.objects.filter(sender_id=receiver, receiver_id=sender),
                        'direct_messages': request.user.profile.dm_users.all()}) # Return context with message objects where users are either sender or receiver.

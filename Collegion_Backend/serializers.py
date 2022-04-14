@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from Collegion_Backend.models import Message
+from Collegion_Backend.models import DMMessage
 #
 # User Serializer
 class UserSerializer(serializers.ModelSerializer):
@@ -16,6 +16,6 @@ class MessageSerializer(serializers.ModelSerializer):
     sender = serializers.SlugRelatedField(many=False, slug_field='username', queryset=User.objects.all())
     receiver = serializers.SlugRelatedField(many=False, slug_field='username', queryset=User.objects.all())
     class Meta:
-        model = Message
+        model = DMMessage
         fields = ['sender', 'receiver', 'message', 'timestamp']
 
