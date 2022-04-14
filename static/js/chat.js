@@ -32,8 +32,24 @@ function send(sender, receiver, message) {
     })
 }
 
+function send_chatroom(sender, chatroom_id, message){
+    $.post('/api/chat-room/send-messages/', '{"sender": "' + sender + '", "chat_room": "' + chatroom_id + '","message": "' + message+ '" }', function(data) {
+        var box = text_box.replace('{sender}', "You");
+        box = box.replace('{message}', message);
+        $('#board').append(box);
+        scrolltoend();
+    })
+}
+
 function receive() {
-    $.get('/api/messages/' + sender_id + '/' + receiver_id + '/', function (data) {
+    var url = '';
+    if(typeof chatroom_id === 'undefined'){
+        url = '/api/messages/' + sender_id + '/' + receiver_id + '/';
+    }
+    else{
+        url = '/api/messages/'+chatroom_id+'/';
+    }
+    $.get(url, function (data) {
         console.log(data);
         if (data.length !== 0) {
             for (var i = 0; i < data.length; i++) {

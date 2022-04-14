@@ -3,7 +3,7 @@
 <nav class="blue lighten-3">
     <div class="nav-wrapper container">
       <a href="#" class="brand-logo">Collegion</a>
-      <ul id="nav-mobile" class="right hide-on-med-and-down">
+      <ul id="nav-mobile" class="right">
           <li><a href="">{{ request.user.username }}</a></li>
           <li><a href="{% url 'logout' %}"><i class="material-icons">power_settings_new</i></a></li>
       </ul>
@@ -15,6 +15,28 @@
         <div class="card">
             <div id="users" class="collection">
 
+            </div>
+            <h4>Chatrooms</h4>
+            <div id="chatroom" class="collection">
+                {% for room in chatroom %}
+                <a href="{% url 'chat_room:message-chatrooms' room.id %}" id="chat_room${room.id}" class="collection-item row">
+                    <img src="https://frontend-1.adjust.com/new-assets/images/site-images/interface/user.svg" class="col s2">
+                    <div class="col s10">
+                    <span class="title" style="font-weight: bolder">{{ room.name }}</span>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+            <h4>Direct Message</h4>
+            <div id="dms" class="collection">
+                {% for dm in direct_messages %}
+                <a href="/chat/{{dm.id}}/{{request.user.id}}/" id="user${receiverId}" class="collection-item row">
+                    <img src="https://frontend-1.adjust.com/new-assets/images/site-images/interface/user.svg" class="col s2">
+                    <div class="col s10">
+                    <span class="title" style="font-weight: bolder">{{dm.username}}</span>
+                    </div>
+                </a>
+                {% endfor %}
             </div>
         </div>
         </div>
@@ -43,6 +65,34 @@
     </div>
     </div>
     {% load static %}
+
+{% if is_chatroom %}
+    <script>
+        // For receiving
+        sender_id = "{{ receiver.id }}";
+        chatroom_id = "{{ chatroom_id }}";
+
+        //For sending
+        $(function () {
+            scrolltoend();
+            $('#chat-box').on('submit', function (event) {
+                event.preventDefault();
+                var message = $('#id_message');
+                send_chatroom('{{ request.user.username }}', '{{ chatroom_id }}', message.val());
+                message.val('');
+            })
+            setInterval(() => {
+                getUsers({{ request.user.id }}, doc => {
+                    let list = ''
+                    doc.map(userItem => {
+                        list += userItem
+                    })
+                    $('#users').html(list)
+                });
+            }, 1000)
+        })
+    </script>
+{% else %}
     <script>
         // For receiving
         sender_id = "{{ receiver.id }}";
@@ -70,4 +120,5 @@
 
 
     </script>
+{% endif %}
 {% endblock %}
