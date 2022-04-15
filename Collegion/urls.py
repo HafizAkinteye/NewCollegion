@@ -40,5 +40,5 @@ urlpatterns = [
     # URL form "/api/users/1"
     path('api/users/<int:pk>', views.user_list, name='user-detail'),      # GET request for user with id
     path('api/users/', views.user_list, name='user-list'),    # POST for new user and GET for all users list
-    path('verification/', include('verify_email.urls')),    #For verifying the emails
+    #path('verification/', include('verify_email.urls')),    #For verifying the emails
 ]
