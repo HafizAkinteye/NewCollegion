@@ -45,7 +45,7 @@ def user_list(request, pk=None):
             user = User.objects.create_user(username=data['username'], password=data['password'])
             user.save()
             user.is_active = False
-            
+
             email_subject = 'Account verification needed'
             email_body = 'Test body'
             email = EmailMessage(
