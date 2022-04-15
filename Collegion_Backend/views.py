@@ -129,4 +129,5 @@ def message_view(request, sender, receiver):
                        'chatroom': ChatRoom.objects.all().filter(member=request.user.id),
                        'messages': DMMessage.objects.filter(sender_id=sender, receiver_id=receiver) |
                                    DMMessage.objects.filter(sender_id=receiver, receiver_id=sender),
+                       'is_message': True,
                        'direct_messages': request.user.profile.dm_users.all()}) # Return context with message objects where users are either sender or receiver.

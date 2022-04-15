@@ -1,0 +1,35 @@
+{% extends 'chat/chat.html' %}
+{% block content %}
+
+    <h3>
+    Create Chatroom
+    </h3>
+    <form id="create-chatroom-form" class="form-group">
+        {% csrf_token %}
+        <div class="row">
+            <div class="input-field col s12">
+                <input name="name" id="id_name" type="text" class="validate">
+                <label for="id_name" data-error="Group name already taken">Group Name</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <input name="password" id="id_password" type="password">
+                <label for="id_password">Password</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <input name="password2" id="id_password2" type="password">
+                <label for="id_password2">Repeat Password</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+            <div class="right">
+                <button class="btn blue waves-effect waves-light pull-s12">Register</button>
+            </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}

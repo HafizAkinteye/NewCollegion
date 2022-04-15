@@ -10,7 +10,10 @@ from chat_room.serializers import ChatRoomMessageSerializer
 # Create your views here.
 
 def create_chat_room(request):
-    pass
+    return render(request, "chat/create-chatroom.html",
+                  {'is_createChatroom': True,
+                   'chatroom': ChatRoom.objects.all().filter(member=request.user.id),
+                   'direct_messages': request.user.profile.dm_users.all()})
 
 def delete_chat_room(request):
     pass
