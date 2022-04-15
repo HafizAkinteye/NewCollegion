@@ -13,3 +13,18 @@
 .error-msg{
     margin: 0.75vh auto 0.75vh auto;
 }
+
+.chatrooms{
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.group-chat-label{
+margin-left: 1vw;
+}
+
+.group-add{
+    margin-right: 2vw;
+    margin-top: 20px;
+}
