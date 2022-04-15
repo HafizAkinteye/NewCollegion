@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from django.conf.urls import url, include
+from django.conf.urls import include
 from Collegion_Backend import views
 from django.contrib.auth import login
 from django.contrib.auth import logout
