@@ -1,6 +1,7 @@
 {% extends 'chat/chat.html' %}
 {% block hide %}{% endblock %}
-{% block messages %}
+{% block content %}
+
     {% for message in messages %}
     {% if message.sender == request.user %}
 <div class="card-panel right" style="width: 75%; position: relative">
@@ -14,11 +15,22 @@
 </div>
     {% endif %}
     {% endfor %}
+
+{% if is_chatroom %}
 <script>
 $(function () {
     $('#user{{ receiver.id }}').addClass('active');
     //Call receive function each 1 seconds to check for new messages in the database
-    setInterval(receive,1000)
+    setInterval(receive,5000)
 })
 </script>
+{% else %}
+<script>
+$(function () {
+    $('#user{{ receiver.id }}').addClass('active');
+    //Call receive function each 1 seconds to check for new messages in the database
+    setInterval(receive,5000)
+})
+</script>
+{% endif %}
 {% endblock %}
