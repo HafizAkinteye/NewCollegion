@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'rest_framework',
     'Collegion_Backend',
-    'verify_email.apps.VerfiyEmailConfig',
+    #'verify_email.apps.VerfiyEmailConfig',
 ]
 
 MIDDLEWARE = [
