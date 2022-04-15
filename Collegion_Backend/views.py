@@ -46,15 +46,18 @@ def user_list(request, pk=None):
             user = User.objects.create_user(username=data['username'], email = data['email'], password=data['password'])
             user.save()
             user.is_active = False
-            
+            print("text")
+            print(user.email)
+
             email_subject = 'Account verification needed'
             email_body = 'Test body'
             send_mail(
                 email_subject,
                 email_body,
                 'collegionapp@gmail.com',
-                ['saifrock619@gmail.com'],
+                [user.email],
                 fail_silently=False,
+                
             )
             
             return JsonResponse(data, status=201)
