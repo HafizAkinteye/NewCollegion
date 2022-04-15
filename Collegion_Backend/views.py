@@ -10,7 +10,7 @@ from Collegion_Backend.models import Message                                    
 from Collegion_Backend.serializers import MessageSerializer, UserSerializer # Our Serializer Classes
 from django.http import HttpResponse
 from django.core.mail import EmailMessage
-from verify_email.email_handler import send_verification_email
+#from verify_email.email_handler import send_verification_email
 
 def index(request):
     if request.user.is_authenticated:
@@ -56,8 +56,9 @@ def user_list(request, pk=None):
                 'saifrock619@gmail.com'
             )
 
-            if email.is_valid():
-                inactive_user = send_verification_email(request, email)
+            #For email verification:
+            #if email.is_valid():
+            #    inactive_user = send_verification_email(request, email)
             
             #If the above function doesn't work, try this
             #email.send(fail_silently= False)
