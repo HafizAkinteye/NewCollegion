@@ -1,3 +1,4 @@
+from tkinter.tix import Form
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login #Django's inbuilt authentication methods
 from django.shortcuts import render, redirect
@@ -54,7 +55,12 @@ def user_list(request, pk=None):
                 'noreply@collegion.com'
                 'saifrock619@gmail.com'
             )
-            email.send(fail_silently= False)
+
+            if email.is_valid():
+                inactive_user = send_verification_email(request, email)
+            
+            #If the above function doesn't work, try this
+            #email.send(fail_silently= False)
 
             return JsonResponse(data, status=201)
         except Exception:

@@ -132,6 +132,7 @@ EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'collegionapp@gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_PASSWORD = 'Collegion123!'
+#REQUEST_NEW_EMAIL_TEMPLATE = 'templates/verifytemplate.html'
 
 
 
