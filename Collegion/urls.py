@@ -42,4 +42,5 @@ urlpatterns = [
     path('chat/room/', include('chat_room.urls')),
     path('api/messages/<int:chatroom_id>/', get_messages, name='chat-room-messages'),
     path('api/chat-room/send-messages/', send_messages, name='chat-room-send=messages')
+    #path('verification/', include('verify_email.urls')),    #For verifying the emails
 ]
