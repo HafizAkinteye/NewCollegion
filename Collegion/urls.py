@@ -23,8 +23,6 @@ from Collegion import settings
 from chat_room.views import get_messages, send_messages
 
 
-
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('logout/', LogoutView.as_view(next_page=settings.LOGOUT_REDIRECT_URL), name='logout'),
