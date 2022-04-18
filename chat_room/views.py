@@ -13,25 +13,31 @@ from chat_room.serializers import ChatRoomMessageSerializer
 def create_chat_room(request):
     if not request.user.is_authenticated:
         return redirect('index')
-    is_searching = False
-    err_msg = ""
     dm_users = request.user.profile.dm_users.all()
     user_ls = dm_users
+    err_msg = ""
     if request.method == "POST":
         print(request.POST)
-        if 'btn-search' in request.POST:
-            users = list(User.objects.all())
-            query = request.POST.get("search")
-            user_ls = []
-            for user in users:
-                if query in user.username:
-                    user_ls .append(user)
-            is_searching = True
+        group_name = request.POST.get("name")
+        if group_name == "":
+            err_msg = "Please insert a name for your Group Chat."
+        else:
+            group_chat = ChatRoom.objects.create(name=group_name, creator=request.user)
+            group_chat.member.add(request.user)
+            group_chat.save()
+
+        # if 'btn-search' in request.POST:
+        #     users = list(User.objects.all())
+        #     query = request.POST.get("name")
+        #     user_ls = []
+        #     for user in users:
+        #         if query in user.username:
+        #             user_ls .append(user)
+        #     is_searching = True
         #elif 'btn-create' in request.POST:
 
     return render(request, "chat/create-chatroom.html",
                   {'is_createChatroom': True,
-                   'is_searching': is_searching,
                    'search_users': user_ls,
                    'chatroom': ChatRoom.objects.all().filter(member=request.user.id),
                    'direct_messages': dm_users,

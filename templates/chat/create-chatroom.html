@@ -4,12 +4,12 @@
 
     <form method="post" id="create-chatroom-form" class="form-group">
         {% csrf_token %}
-        <div class="row">
-            <div class="col s12">
-                <h3 style="margin-right:2px">Create Chatroom</h3>
-                <input type="submit" class="btn blue waves-effect waves-light right" name="btn-create" value="create">
+        <h3 style="margin-right:2px">Create Chatroom</h3>
+        {% if not error == ""%}
+            <div class="row chatroom-err">
+                <p class="chatroom-err-msg">{{ error }}</p>
             </div>
-        </div>
+        {% endif %}
         <div class="row">
             <div class="input-field col s12">
                 <input name="name" id="id_name" type="text" class="validate">
@@ -17,8 +17,13 @@
             </div>
         </div>
         <div class="row">
-                <input type="text" placeholder="Search by name, username" name="search" style="width: 210px">
-            <input type="submit" name="btn-search" class="btn btn-success" value="Search">
+            <div class="col s12">
+                <input type="submit" class="btn blue waves-effect waves-light right" name="btn-create" value="create">
+            </div>
         </div>
+<!--        <div class="row">-->
+<!--            <input type="text" placeholder="Search by name, username" name="search" style="width: 210px">-->
+<!--            <input type="submit" name="btn-search" class="btn btn-success" value="Search">-->
+<!--        </div>-->
     </form>
 {% endblock %}
