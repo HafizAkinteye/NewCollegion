@@ -1,0 +1,23 @@
+{% extends 'chat/chat.html' %}
+{% block content %}
+
+<form method="post" id="add-user-form" class="form-group">
+       <div class="row">
+           <input type="text" placeholder="Search by name, username" name="search" style="width: 210px">
+           <input type="submit" name="btn-search" class="btn btn-success" value="Search">
+
+       </div>
+       {% for user in search_users %}
+         <a href="{% url 'chat_room:add-user' group user.id %}" id="user_card">
+             <li class="list-group-item list-group-item-action">
+             <div class="row">
+             <div class="col">
+                 <div class="row"><p>@{{user.username}}</p></div>
+             </div>
+             </div>
+             </li>
+         </a>
+      {% endfor %}
+</form>
+
+{% endblock %}
