@@ -14,6 +14,22 @@
     margin: 0.75vh auto 0.75vh auto;
 }
 
+.chatroom-err-msg{
+    margin: 0.75vh auto 0.75vh auto;
+    text-align: center;
+}
+.chatroom-err{
+    font-family: Inter;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 2.2vw;
+    line-height: 2vw;
+    margin-bottom: 2px;
+    color: #FFFFFF;
+    text-align: center;
+    background: #FF0000;
+}
+
 .chatrooms{
     display: flex;
     justify-content: space-between;
