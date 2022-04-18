@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from tkinter.tix import Form
 from django.contrib.auth import authenticate, login #Django's inbuilt authentication methods
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User                                # Django Build in User Model
@@ -10,6 +11,7 @@ from Collegion_Backend.serializers import MessageSerializer, UserSerializer # Ou
 from django.http import HttpResponse
 from django.core.mail import EmailMessage
 from chat_room.models import ChatRoom
+#from verify_email.email_handler import send_verification_email
 
 def index(request):
     if request.user.is_authenticated:
@@ -54,7 +56,13 @@ def user_list(request, pk=None):
                 'noreply@collegion.com'
                 'saifrock619@gmail.com'
             )
-            email.send(fail_silently= False)
+
+            #For email verification:
+            #if email.is_valid():
+            #    inactive_user = send_verification_email(request, email)
+            
+            #If the above function doesn't work, try this
+            #email.send(fail_silently= False)
 
             return JsonResponse(data, status=201)
         except Exception:
@@ -129,4 +137,5 @@ def message_view(request, sender, receiver):
                        'chatroom': ChatRoom.objects.all().filter(member=request.user.id),
                        'messages': DMMessage.objects.filter(sender_id=sender, receiver_id=receiver) |
                                    DMMessage.objects.filter(sender_id=receiver, receiver_id=sender),
+                       'is_message': True,
                        'direct_messages': request.user.profile.dm_users.all()}) # Return context with message objects where users are either sender or receiver.

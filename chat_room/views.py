@@ -2,15 +2,40 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
-
+from django.contrib.auth.models import User
 from Collegion_Backend.models import GroupMessage
 from chat_room.models import ChatRoom
 from chat_room.serializers import ChatRoomMessageSerializer
 
+
 # Create your views here.
 
 def create_chat_room(request):
-    pass
+    if not request.user.is_authenticated:
+        return redirect('index')
+    is_searching = False
+    err_msg = ""
+    dm_users = request.user.profile.dm_users.all()
+    user_ls = dm_users
+    if request.method == "POST":
+        print(request.POST)
+        if 'btn-search' in request.POST:
+            users = list(User.objects.all())
+            query = request.POST.get("search")
+            user_ls = []
+            for user in users:
+                if query in user.username:
+                    user_ls .append(user)
+            is_searching = True
+        #elif 'btn-create' in request.POST:
+
+    return render(request, "chat/create-chatroom.html",
+                  {'is_createChatroom': True,
+                   'is_searching': is_searching,
+                   'search_users': user_ls,
+                   'chatroom': ChatRoom.objects.all().filter(member=request.user.id),
+                   'direct_messages': dm_users,
+                   'error': err_msg})
 
 def delete_chat_room(request):
     pass

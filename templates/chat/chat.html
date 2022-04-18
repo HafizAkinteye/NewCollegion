@@ -18,7 +18,7 @@
             </div>
             <div class="orange lighten-3 chatrooms">
                 <h4 class="group-chat-label">Chatrooms</h4>
-                <a href="" class="material-icons group-add">
+                <a href="{% url 'chat_room:create-chatroom' %}" class="material-icons group-add">
                     group_add
                 </a>
             </div>
@@ -48,9 +48,11 @@
         <div class="col s9">
             <div class="card">
             <div id="board" class="section grey lighten-3" style="height: 68vh; padding: 5px; overflow-y: scroll">
-                {% block messages %}
+
+                {% block content %}
 
                 {% endblock %}
+
             </div>
             <form id="chat-box" class="form-group {% block hide %}hide{% endblock %}" method="post">
                 {% csrf_token %}
