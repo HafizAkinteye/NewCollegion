@@ -8,7 +8,7 @@
 
        </div>
        {% for user in search_users %}
-         <a href="{% url 'chat_room:add-user' group user.id %}" id="user_card">
+         <a href="/chat/room/addUser/{{group}}/{{user.id}}/" id="user_card">
              <li class="list-group-item list-group-item-action">
              <div class="row">
              <div class="col">

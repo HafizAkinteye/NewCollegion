@@ -12,26 +12,30 @@ from chat_room.serializers import ChatRoomMessageSerializer
 # Create your views here.
 def add_user(request, group_id, user_to_add_id):
     username = request.user.username
-    userToAdd = User.objects.get(id = user_to_add_id)
-    chatRoom = ChatRoom.objects.get(id = group_id)
+    userToAdd = User.objects.get(id=user_to_add_id)
+    chatRoom = ChatRoom.objects.get(id=group_id)
     chatRoom.member.add(userToAdd)
 
-    return redirect("/chat/room/addUserForm/")
+    return redirect("/chat/room/addUserForm/"+str(group_id))
 
 @csrf_exempt
 def add_user_form(request, group_id):
     if not request.user.is_authenticated:
         return redirect('index')
 
-    user_ls = []
+    group_chat = ChatRoom.objects.get(id=group_id)
     if request.method == "POST":
+        user_ls = []
         users = list(User.objects.all())
         query = request.POST.get("search")
         for user in users:
-            if query in user.username:
+            if query in user.username and user not in group_chat.member.all():
                 user_ls.append(user)
-        is_searching = True
-
+    else:
+        user_ls = []
+        for user in list(request.user.profile.dm_users.all()):
+            if not user in group_chat.member.all():
+                user_ls.append(user)
 
     return render(request, "chat/add-to-group.html",
                   {
