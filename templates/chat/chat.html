@@ -25,9 +25,13 @@
             <div id="chatroom" class="collection">
                 {% for room in chatroom %}
                 <a href="{% url 'chat_room:message-chatrooms' room.id %}" id="chat_room${room.id}" class="collection-item row">
-                    <img src="https://frontend-1.adjust.com/new-assets/images/site-images/interface/user.svg" class="col s2">
-                    <div class="col s10">
-                    <span class="title" style="font-weight: bolder">{{ room.name }}</span>
+
+                    <div class="col s10 chatrooms">
+                    <!--  <img src="https://frontend-1.adjust.com/new-assets/images/site-images/interface/user.svg" class="col s2"> -->
+                      <span class="title" style="font-weight: bolder">{{ room.name }}</span>
+                        <a href="{% url 'chat_room:add-to-group' room.id %}" class="material-icons person_add_alt">
+                            person_add_alt
+                        </a>
                     </div>
                 </a>
                 {% endfor %}
