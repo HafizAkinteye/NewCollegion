@@ -12,6 +12,7 @@ from django.http import HttpResponse
 from django.core.mail import send_mail
 from django.conf import settings
 from verify_email.email_handler import send_verification_email
+import re
 
 
 def index(request):
@@ -48,26 +49,29 @@ def user_list(request, pk=None):
             user = User.objects.create_user(username=data['username'], email = data['email'], password=data['password'])
             user.save()
             user.is_active = False
+
             print("text")
             print(user.email)
 
-            email_subject = 'Account verification needed'
-            email_body = 'Test body'
-
-            if user.is_valid():
+                match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[edu]+)*(\.{2,4})$', user.email)
+            if match == None:
+                print('Email is not edu email') #change to show up on register.html and prevent the user to being created
+            else:
+                print('Email is an edu email')
+                print(user.email)
+                email_subject = 'Account verification needed'
+                email_body = 'Test body'
+                if user.is_valid():
                 inactive_user = send_verification_email(request, user)
-            
-            #send_mail(
-            #    email_subject,
-            #    email_body,
-            #    'collegionapp@gmail.com',
-            #    [user.email],
-            #    fail_silently=False,
-                
-            #)
+                #send_mail(
+                #email_subject,
+                #email_body,
+                #'collegionapp@gmail.com',
+                #[user.email],
+                fail_silently=False,
+                )
 
 
-            
             return JsonResponse(data, status=201)
         except Exception:
             return JsonResponse({'error': "Something went wrong"}, status=400)
