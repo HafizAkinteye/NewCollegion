@@ -20,7 +20,7 @@ from django.contrib.auth import login
 from django.contrib.auth import logout
 from django.contrib.auth.views import LogoutView
 from Collegion import settings
-
+from django.conf.urls import include
 
 
 
@@ -39,4 +39,6 @@ urlpatterns = [
     # URL form "/api/users/1"
     path('api/users/<int:pk>', views.user_list, name='user-detail'),      # GET request for user with id
     path('api/users/', views.user_list, name='user-list'),    # POST for new user and GET for all users list
+    path('verification/', include('verify_email.urls')),
+
 ]

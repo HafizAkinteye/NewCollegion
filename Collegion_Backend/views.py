@@ -1,3 +1,4 @@
+import email
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login #Django's inbuilt authentication methods
 from django.shortcuts import render, redirect
@@ -10,6 +11,7 @@ from Collegion_Backend.serializers import MessageSerializer, UserSerializer # Ou
 from django.http import HttpResponse
 from django.core.mail import send_mail
 from django.conf import settings
+from verify_email.email_handler import send_verification_email
 
 
 def index(request):
@@ -51,14 +53,20 @@ def user_list(request, pk=None):
 
             email_subject = 'Account verification needed'
             email_body = 'Test body'
-            send_mail(
-                email_subject,
-                email_body,
-                'collegionapp@gmail.com',
-                [user.email],
-                fail_silently=False,
+
+            if user.is_valid():
+                inactive_user = send_verification_email(request, user)
+            
+            #send_mail(
+            #    email_subject,
+            #    email_body,
+            #    'collegionapp@gmail.com',
+            #    [user.email],
+            #    fail_silently=False,
                 
-            )
+            #)
+
+
             
             return JsonResponse(data, status=201)
         except Exception:
@@ -86,11 +94,11 @@ def message_list(request, sender=None, receiver=None):
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
 
-
 def register_view(request):
     """
     Render registration template
     """
+    
     if request.user.is_authenticated:
         return redirect('chats')
     return render(request, 'chat/register.html', {})
