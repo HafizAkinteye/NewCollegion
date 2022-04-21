@@ -53,7 +53,7 @@ def user_list(request, pk=None):
             print("text")
             print(user.email)
 
-                match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[edu]+)*(\.{2,4})$', user.email)
+            match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[edu]+)*(\.{2,4})$', user.email)
             if match == None:
                 print('Email is not edu email') #change to show up on register.html and prevent the user to being created
             else:
@@ -62,14 +62,14 @@ def user_list(request, pk=None):
                 email_subject = 'Account verification needed'
                 email_body = 'Test body'
                 if user.is_valid():
-                inactive_user = send_verification_email(request, user)
+                    inactive_user = send_verification_email(request, user)
                 #send_mail(
                 #email_subject,
                 #email_body,
                 #'collegionapp@gmail.com',
                 #[user.email],
                 fail_silently=False,
-                )
+                #)
 
 
             return JsonResponse(data, status=201)
