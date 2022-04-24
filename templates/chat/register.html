@@ -38,17 +38,20 @@
     </form>
     <script>
     $(function () {
-        $('#register-form').on('submit', function (event) {
+        $('#register-form').on('submit', function (event) 
+        {
             event.preventDefault();
             var username = $('#id_username').val();
             var email = $('#id_email').val();
             if(username !== '')
             {
                 var password = $('#id_password').val();
-                if(password !== '' && password === $('#id_password2').val()){
+                if(password !== '' && password === $('#id_password2').val())
+                {
                     register(username, email, password);
                 }
-                else{
+                else
+                {
                     alert("The passwords doesn't match!");
                 }
             }
