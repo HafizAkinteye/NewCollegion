@@ -21,7 +21,7 @@
 $(function () {
     $('#user{{ receiver.id }}').addClass('active');
     //Call receive function each 1 seconds to check for new messages in the database
-    setInterval(receive,5000)
+    setInterval(receive,2000)
 })
 </script>
 {% else %}
@@ -29,7 +29,7 @@ $(function () {
 $(function () {
     $('#user{{ receiver.id }}').addClass('active');
     //Call receive function each 1 seconds to check for new messages in the database
-    setInterval(receive,5000)
+    setInterval(receive,2000)
 })
 </script>
 {% endif %}

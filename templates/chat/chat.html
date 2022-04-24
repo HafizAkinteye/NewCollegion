@@ -9,73 +9,104 @@
       </ul>
     </div>
 </nav>
-    <div class="section" style="height: 80vh">
-    <div class="row">
-        <div class="col s3">
-        <div class="card">
-            <div id="users" class="collection">
-
-            </div>
-            <div class="orange lighten-3 chatrooms">
-                <h4 class="group-chat-label">Chatrooms</h4>
+<div class="section" style="height: 80vh">
+<div class="row">
+    <div class="col s3">
+    <div class="card">
+        <div class="orange lighten-3 chatrooms">
+            <h4 class="group-chat-label">Chatrooms</h4>
+            <div class="tooltip">
+                <span class="tooltiptext">Create Group Chat</span>
                 <a href="{% url 'chat_room:create-chatroom' %}" class="material-icons group-add">
                     group_add
                 </a>
             </div>
-            <div id="chatroom" class="collection">
-                {% for room in chatroom %}
-                <a href="{% url 'chat_room:message-chatrooms' room.id %}" id="chat_room${room.id}" class="collection-item row">
+        </div>
+        <div id="chatroom" class="collection">
+            {% for room in chatroom %}
+            <a href="{% url 'chat_room:message-chatrooms' room.id %}" id="chat_room${room.id}" class="collection-item row">
 
-                    <div class="col s10 chatrooms">
-                    <!--  <img src="https://frontend-1.adjust.com/new-assets/images/site-images/interface/user.svg" class="col s2"> -->
-                      <span class="title" style="font-weight: bolder">{{ room.name }}</span>
-                        <a href="{% url 'chat_room:add-to-group' room.id %}" class="material-icons person_add_alt">
+                <div class="col s10 chatrooms">
+                <!--  <img src="https://frontend-1.adjust.com/new-assets/images/site-images/interface/user.svg" class="col s2"> -->
+                    <span class="title" style="font-weight: bolder">{{ room.name }}</span>
+                    <a href="{% url 'chat_room:add-to-group' room.id %}" class="material-icons person_add_alt">
+                        person_add_alt
+                    </a>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        <div class="orange lighten-3 chatrooms">
+            <h4 class="group-chat-label">Direct Message</h4>
+            <div class="tooltip">
+                <span class="tooltiptext">Add User to List</span>
+                <a href="{% url 'Collegion_Backend:add-dm-user-form' %}" class="material-icons group-add">
+                    person_add_alt
+                </a>
+            </div>
+        </div>
+        <div id="dms" class="collection">
+            {% for dm in direct_messages %}
+            <a href="/chat/{{request.user.id}}/{{dm.id}}/" id="user${receiverId}" class="collection-item row">
+                <img src="https://frontend-1.adjust.com/new-assets/images/site-images/interface/user.svg" class="col s2">
+                <div class="col s10">
+                <span class="title" style="font-weight: bolder">{{ dm.username }}</span>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    </div>
+    <div class="col s9">
+        <div class="card">
+            {% if sender %}
+            <div class="dmheader">
+                <span class="title" style="font-weight: bolder; margin-left: 1vw; font-size: 20px; color:#1AA7EC">{{sender}}</span>
+            </div>
+            {% elif group_name %}
+            <div class="dmheader">
+                <span class="title" style="font-weight: bolder; margin-left: 1vw; font-size: 20px; color:#1AA7EC">{{group_name}}</span>
+                <div class="pull-right" style="margin-right:1vw;">
+                    <div class="tooltip">
+                        <span class="tooltiptext">Add Member</span>
+                        <a href="{% url 'chat_room:add-to-group' chatroom_id %}" class="material-icons">
                             person_add_alt
                         </a>
                     </div>
-                </a>
-                {% endfor %}
-            </div>
-            <h4>Direct Message</h4>
-            <div id="dms" class="collection">
-                {% for dm in direct_messages %}
-                <a href="/chat/{{request.user.id}}/{{dm.id}}/" id="user${receiverId}" class="collection-item row">
-                    <img src="https://frontend-1.adjust.com/new-assets/images/site-images/interface/user.svg" class="col s2">
-                    <div class="col s10">
-                    <span class="title" style="font-weight: bolder">{{ dm.username }}</span>
-                    </div>
-                </a>
-                {% endfor %}
-            </div>
-        </div>
-        </div>
-        <div class="col s9">
-            <div class="card">
-            <div id="board" class="section grey lighten-3" style="height: 68vh; padding: 5px; overflow-y: scroll">
-
-                {% block content %}
-
-                {% endblock %}
-
-            </div>
-            <form id="chat-box" class="form-group {% block hide %}hide{% endblock %}" method="post">
-                {% csrf_token %}
-                <div class="row">
-                    <div class="col s11">
-                        <div class="input-field">
-                            <input id="id_message" name="message" type="text" placeholder="Type your message..">
-                        </div>
-                    </div>
-                    <div class="col s1" style="line-height: 80px">
-                        <button class="btn btn-floating blue lighten-2 waves-effect waves-light"><i class="material-icons">send</i></button>
+                    <div class="tooltip">
+                        <span class="tooltiptext">Leave Group</span>
+                        <a href="{% url 'chat_room:remove-from-group' chatroom_id %}" class="material-icons">
+                            delete
+                        </a>
                     </div>
                 </div>
-            </form>
             </div>
+            {% endif %}
+        <div id="board" class="section grey lighten-3" style="height: 68vh; padding: 5px; overflow-y: scroll">
+
+            {% block content %}
+
+            {% endblock %}
+
+        </div>
+        <form id="chat-box" class="form-group {% block hide %}hide{% endblock %}" method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col s11">
+                    <div class="input-field">
+                        <input id="id_message" name="message" type="text" placeholder="Type your message..">
+                    </div>
+                </div>
+                <div class="col s1" style="line-height: 80px">
+                    <button class="btn btn-floating blue lighten-2 waves-effect waves-light"><i class="material-icons">send</i></button>
+                </div>
+            </div>
+        </form>
         </div>
     </div>
-    </div>
-    {% load static %}
+</div>
+</div>
+{% load static %}
 
 {% if is_chatroom %}
     <script>
@@ -92,15 +123,6 @@
                 send_chatroom('{{ request.user.username }}', '{{ chatroom_id }}', message.val());
                 message.val('');
             })
-            setInterval(() => {
-                getUsers({{ request.user.id }}, doc => {
-                    let list = ''
-                    doc.map(userItem => {
-                        list += userItem
-                    })
-                    $('#users').html(list)
-                });
-            }, 1000)
         })
     </script>
 {% else %}
@@ -118,18 +140,7 @@
                 send('{{ request.user.username }}', '{{ receiver.username }}', message.val());
                 message.val('');
             })
-            setInterval(() => {
-                getUsers({{ request.user.id }}, doc => {
-                    let list = ''
-                    doc.map(userItem => {
-                        list += userItem
-                    })
-                    $('#users').html(list)
-                });
-            }, 1000)
         })
-
-
     </script>
 {% endif %}
 {% endblock %}

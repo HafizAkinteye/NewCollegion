@@ -9,4 +9,5 @@ urlpatterns = [
     path('create/', create_chat_room, name='create-chatroom'),
     path('addUser/<int:group_id>/<int:user_to_add_id>/', add_user, name='add-user'),
     path('addUserForm/<int:group_id>/', add_user_form, name='add-to-group'),
+    path('remove-user/<int:room_id>/', remove_from_chat_room, name='remove-from-group')
 ]

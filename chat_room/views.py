@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from Collegion_Backend.models import GroupMessage
 from chat_room.models import ChatRoom
 from chat_room.serializers import ChatRoomMessageSerializer
+import re
 
 
 
@@ -22,19 +23,21 @@ def add_user(request, group_id, user_to_add_id):
 def add_user_form(request, group_id):
     if not request.user.is_authenticated:
         return redirect('index')
-
+    regex = '@((\w+)[.]?)+'
+    user_domain = re.search(regex, request.user.email)
     group_chat = ChatRoom.objects.get(id=group_id)
     if request.method == "POST":
         user_ls = []
         users = list(User.objects.all())
         query = request.POST.get("search")
         for user in users:
-            if query in user.username and user not in group_chat.member.all():
+            if query in user.username and user not in group_chat.member.all()\
+                    and user_domain.group() == re.search(regex, user.email).group():
                 user_ls.append(user)
     else:
         user_ls = []
         for user in list(request.user.profile.dm_users.all()):
-            if not user in group_chat.member.all():
+            if not user in group_chat.member.all() and user_domain.group() == re.search(regex, user.email).group():
                 user_ls.append(user)
 
     return render(request, "chat/add-to-group.html",
@@ -101,8 +104,10 @@ def message_chat_view(request, chatroom_id):
     if not request.user.is_authenticated:
         return redirect('index')
     if request.method == "GET":
+        chat_room = ChatRoom.objects.get(id=chatroom_id)
         return render(request, "chat/messages.html",
                       {'chatroom_id': chatroom_id,
+                       'group_name': chat_room.name,
                        'is_chatroom': True,
                        'chatroom': ChatRoom.objects.all().filter(member=request.user.id),
                        'messages': GroupMessage.objects.all().filter(chat_room=chatroom_id),
@@ -111,5 +116,11 @@ def message_chat_view(request, chatroom_id):
 def invite_to_chat_room(request):
     pass
 
-def remove_from_chat_room(request):
-    pass
+def remove_from_chat_room(request, room_id):
+    if not request.user.is_authenticated:
+        return redirect('index')
+    if request.method == "GET":
+        chat_room = ChatRoom.objects.get(id=room_id)
+        chat_room.member.remove(request.user)
+        return redirect('index')
+

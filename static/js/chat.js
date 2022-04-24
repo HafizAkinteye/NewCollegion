@@ -2,15 +2,6 @@
 
 let userState = ''
 
-const userDiv = (senderId, receiverId, name, online) =>
-    (`<a href="/chat/${senderId}/${receiverId}" id="user${receiverId}" class="collection-item row">
-                    <img src="https://frontend-1.adjust.com/new-assets/images/site-images/interface/user.svg" class="col s2">
-                    <div class="col s10">
-                    <span class="title" style="font-weight: bolder">${name}</span>
-                    <span style="color: ${online ? 'green' : 'red'}; float: right">${online ? 'online' : 'offline'}</span>
-                    </div>
-                </a>`)
-
 function scrolltoend() {
     $('#board').stop().animate({
         scrollTop: $('#board')[0].scrollHeight
@@ -57,22 +48,6 @@ function receive() {
                 $('#board').append(box);
                 scrolltoend();
             }
-        }
-    })
-}
-
-function getUsers(senderId, callback) {
-    return $.get('/api/users', function (data) {
-        if (userState !== JSON.stringify(data)) {
-            userState = JSON.stringify(data);
-            const doc = data.reduce((res, user) => {
-                if (user.id === senderId) {
-                    return res
-                } else {
-                    return [userDiv(senderId, user.id, user.username, user.online), ...res]
-                }
-            }, [])
-            callback(doc)
         }
     })
 }
