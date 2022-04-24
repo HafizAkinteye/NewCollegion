@@ -12,6 +12,7 @@ from django.http import HttpResponse
 from django.core.mail import EmailMessage
 from chat_room.models import ChatRoom
 #from verify_email.email_handler import send_verification_email
+import re
 
 def index(request):
     if request.user.is_authenticated:
@@ -47,7 +48,7 @@ def user_list(request, pk=None):
             user = User.objects.create_user(username=data['username'], password=data['password'])
             user.save()
             user.is_active = False
-            
+
             email_subject = 'Account verification needed'
             email_body = 'Test body'
             email = EmailMessage(
@@ -106,8 +107,6 @@ def chat_view(request):
         return redirect('index')
     if request.method == "GET":
         active_chatrooms = ChatRoom.objects.all().filter(member=request.user.id)
-        for chat in active_chatrooms:
-            print(chat.name)
         return render(request, 'chat/chat.html',
                       {'users': User.objects.exclude(username=request.user.username),
                        'chatroom': active_chatrooms,
@@ -125,17 +124,52 @@ def message_view(request, sender, receiver):
         else:
             other_user = get_object_or_404(User, pk=sender)
         user = request.user
-        if other_user not in user.profile.dm_users.all():
-            user.profile.dm_users.add(other_user)
-            user.save()
-        if user not in other_user.profile.dm_users.all():
-            other_user.profile.dm_users.add(user)
-            other_user.save()
+        regex = '@((\w+)[.]?)+'
+        user_domain = re.search(regex, request.user.email)
+        if user_domain.group() == re.search(regex, other_user.email).group():
+            if other_user not in user.profile.dm_users.all():
+                user.profile.dm_users.add(other_user)
+                user.save()
+            if user not in other_user.profile.dm_users.all():
+                other_user.profile.dm_users.add(user)
+                other_user.save()
         return render(request, "chat/messages.html",
                       {'users': User.objects.exclude(username=request.user.username), #List of users
+                       'sender': other_user,
                        'receiver': User.objects.get(id=receiver),
                        'chatroom': ChatRoom.objects.all().filter(member=request.user.id),
                        'messages': DMMessage.objects.filter(sender_id=sender, receiver_id=receiver) |
                                    DMMessage.objects.filter(sender_id=receiver, receiver_id=sender),
                        'is_message': True,
                        'direct_messages': request.user.profile.dm_users.all()}) # Return context with message objects where users are either sender or receiver.
+
+@csrf_exempt
+def add_dm_user_form(request):
+    if not request.user.is_authenticated:
+        return redirect('index')
+    regex = '@((\w+)[.]?)+'
+    user_domain = re.search(regex, request.user.email)
+    dm_users = request.user.profile.dm_users.all()
+    if request.method == "POST":
+        user_ls = []
+        users = list(User.objects.all())
+        query = request.POST.get("search")
+        for user in users:
+            if query in user.username and user not in dm_users \
+                    and user_domain.group() == re.search(regex, user.email).group():
+                user_ls.append(user)
+    else:
+        user_ls = []
+        for user in list(request.user.profile.dm_users.all()):
+            if not user in dm_users and user_domain.group() == re.search(regex, user.email).group():
+                user_ls.append(user)
+
+    return render(request, "chat/add-dm.html",
+                  {
+                      'search_users': user_ls,
+                      'chatroom': ChatRoom.objects.all().filter(member=request.user.id),
+                      'direct_messages': request.user.profile.dm_users.all()})
+
+def dm_add(request, user_id):
+
+    pass

@@ -26,6 +26,7 @@ class GroupMessage(models.Model):
     chat_room = models.ForeignKey(ChatRoom, on_delete=models.SET_NULL, related_name='chat_room', null=True)
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='group_sender')
 
+
     def __str__(self):
         return self.message
 
@@ -51,5 +52,3 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
     instance.profile.save()
-
-
