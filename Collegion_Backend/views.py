@@ -66,9 +66,11 @@ def user_list(request, pk=None):
             #If the above function doesn't work, try this
             #email.send(fail_silently= False)
             user = User.objects.create_user(username=data['username'], email = data['email'], password=data['password'])
+            random_int = randint(100, 999)
+            user.profile.anonymous_name = "Anonymous"+str(random_int)+str(user.id)
             user.save()
-            user.is_active = False
 
+            user.is_active = False
             print("text")
             print(user.email)
 
