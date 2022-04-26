@@ -11,6 +11,7 @@ from Collegion_Backend.serializers import MessageSerializer, UserSerializer # Ou
 from django.http import HttpResponse
 from django.core.mail import EmailMessage
 from chat_room.models import ChatRoom
+from random import randint
 #from verify_email.email_handler import send_verification_email
 import re
 
@@ -46,6 +47,8 @@ def user_list(request, pk=None):
         data = JSONParser().parse(request)
         try:
             user = User.objects.create_user(username=data['username'], password=data['password'])
+            initial = randint(100, 999)
+            user.profile.anonymous_name = "Anonymous"+str(initial)+str(user.id)
             user.save()
             user.is_active = False
 
@@ -126,20 +129,25 @@ def message_view(request, sender, receiver):
         user = request.user
         regex = '@((\w+)[.]?)+'
         user_domain = re.search(regex, request.user.email)
-        if user_domain.group() == re.search(regex, other_user.email).group():
+        if user_domain.group() == re.search(regex, other_user.email).group() and not other_user == user:
             if other_user not in user.profile.dm_users.all():
                 user.profile.dm_users.add(other_user)
                 user.save()
             if user not in other_user.profile.dm_users.all():
                 other_user.profile.dm_users.add(user)
                 other_user.save()
+        messages = DMMessage.objects.filter(sender_id=sender, receiver_id=receiver) | \
+                                   DMMessage.objects.filter(sender_id=receiver, receiver_id=sender)
+        for msg in messages:
+            if not msg.is_read:
+                msg.is_read = True
+                msg.save()
         return render(request, "chat/messages.html",
                       {'users': User.objects.exclude(username=request.user.username), #List of users
                        'sender': other_user,
                        'receiver': User.objects.get(id=receiver),
                        'chatroom': ChatRoom.objects.all().filter(member=request.user.id),
-                       'messages': DMMessage.objects.filter(sender_id=sender, receiver_id=receiver) |
-                                   DMMessage.objects.filter(sender_id=receiver, receiver_id=sender),
+                       'messages': messages,
                        'is_message': True,
                        'direct_messages': request.user.profile.dm_users.all()}) # Return context with message objects where users are either sender or receiver.
 
@@ -171,5 +179,8 @@ def add_dm_user_form(request):
                       'direct_messages': request.user.profile.dm_users.all()})
 
 def dm_add(request, user_id):
+    userToAdd = User.objects.get(id=user_id)
+    user = request.user
+    user.profile.dm_users.add(userToAdd)
 
-    pass
+    return redirect("/chat/add-dm-form/")

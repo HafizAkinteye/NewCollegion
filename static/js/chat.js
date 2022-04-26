@@ -22,9 +22,19 @@ function send(sender, receiver, message) {
     })
 }
 
-function send_chatroom(sender, chatroom_id, message){
-    $.post('/api/chat-room/send-messages/', '{"sender": "' + sender + '", "chat_room": "' + chatroom_id + '","message": "' + message+ '" }', function(data) {
-        var box = text_box.replace('{sender}', "You");
+function send_chatroom(sender_username, sender_anon, chatroom_id, message, is_anonymous){
+    var display_name = sender_username;
+    var static_str = "true";
+    if(is_anonymous == static_str){
+        display_name = sender_anon;
+    }
+    $.post('/api/chat-room/send-messages/', '{"sender": "' + sender_username + '", "chat_room": "' + chatroom_id + '","message": "' + message+ '","anonymous": "' + is_anonymous+ '" ,"display_name": "' + display_name + '"}', function(data) {
+        var static_str = "true";
+        var sender = "You";
+        if(is_anonymous == static_str){
+            sender = sender_anon;
+        }
+        var box = text_box.replace('{sender}', sender);
         box = box.replace('{message}', message);
         $('#board').append(box);
         scrolltoend();
@@ -41,13 +51,25 @@ function receive() {
     }
     $.get(url, function (data) {
         if (data.length !== 0) {
-            for (var i = 0; i < data.length; i++) {
-                var box = text_box.replace('{sender}', data[i].sender);
-                box = box.replace('{message}', data[i].message);
-                box = box.replace('right', 'left blue lighten-5');
-                $('#board').append(box);
-                scrolltoend();
+            if(typeof chatroom_id === 'undefined'){
+                for (var i = 0; i < data.length; i++) {
+                    var box = text_box.replace('{sender}', data[i].sender);
+                    box = box.replace('{message}', data[i].message);
+                    box = box.replace('right', 'left blue lighten-5');
+                    $('#board').append(box);
+                    scrolltoend();
+                }
             }
+            else{
+                for (var i = 0; i < data.length; i++) {
+                    var box = text_box.replace('{sender}', data[i].display_name);
+                    box = box.replace('{message}', data[i].message);
+                    box = box.replace('right', 'left blue lighten-5');
+                    $('#board').append(box);
+                    scrolltoend();
+                }
+            }
+
         }
     })
 }

@@ -25,6 +25,8 @@ class GroupMessage(models.Model):
     message = models.CharField(max_length=1200)
     chat_room = models.ForeignKey(ChatRoom, on_delete=models.SET_NULL, related_name='chat_room', null=True)
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='group_sender')
+    anonymous = models.BooleanField(default=False)
+    display_name = models.CharField(max_length=40, default="")
 
 
     def __str__(self):
@@ -37,6 +39,8 @@ class GroupMessage(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     dm_users = models.ManyToManyField(User, related_name="dm_users")
+    is_anonymous = models.BooleanField(default=False)
+    anonymous_name = models.CharField(max_length=40, default="")
 
     # this method called for admin panel
     class Meta:

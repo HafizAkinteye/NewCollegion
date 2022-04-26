@@ -5,7 +5,7 @@ from rest_framework.parsers import JSONParser
 from django.contrib.auth.models import User
 from Collegion_Backend.models import GroupMessage
 from chat_room.models import ChatRoom
-from chat_room.serializers import ChatRoomMessageSerializer
+from chat_room.serializers import ChatRoomMessageSerializer, GetChatRoomMessageSerializer
 import re
 
 
@@ -86,7 +86,7 @@ def get_messages(request, chatroom_id):
         for m in messages:
             m.is_read.add(request.user)
             m.save()
-        serializer = ChatRoomMessageSerializer(messages, many=True, context={'request': request})
+        serializer = GetChatRoomMessageSerializer(messages, many=True, context={'request': request})
         return JsonResponse(serializer.data, safe=False)
 
 @csrf_exempt
@@ -105,16 +105,31 @@ def message_chat_view(request, chatroom_id):
         return redirect('index')
     if request.method == "GET":
         chat_room = ChatRoom.objects.get(id=chatroom_id)
+        if request.user.profile.is_anonymous:
+            anonymous = "true"
+        else:
+            anonymous = "false"
+        group_messages = GroupMessage.objects.all().filter(chat_room=chatroom_id)
+        for msg in group_messages:
+            if request.user not in msg.is_read.all():
+                msg.is_read.add(request.user)
+                msg.save()
+
         return render(request, "chat/messages.html",
                       {'chatroom_id': chatroom_id,
+                       'anonymous_str': anonymous,
+                       'is_anonymous': request.user.profile.is_anonymous,
                        'group_name': chat_room.name,
                        'is_chatroom': True,
                        'chatroom': ChatRoom.objects.all().filter(member=request.user.id),
-                       'messages': GroupMessage.objects.all().filter(chat_room=chatroom_id),
+                       'messages': GroupMessage.objects.all().filter(chat_room=chatroom_id, is_read=request.user.id),
                        'direct_messages': request.user.profile.dm_users.all()})
 
-def invite_to_chat_room(request):
-    pass
+@csrf_exempt
+def anonymous_handle(request):
+    request.user.profile.is_anonymous = not request.user.profile.is_anonymous
+    request.user.save()
+    return redirect(request.POST.get("next"))
 
 def remove_from_chat_room(request, room_id):
     if not request.user.is_authenticated:
