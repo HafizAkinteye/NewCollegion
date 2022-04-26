@@ -74,8 +74,8 @@ function receive() {
     })
 }
 
-function register(username, password) {
-    $.post('/api/users/', '{"username": "' + username + '", "password": "' + password + '"}',
+function register(username, email, password) {
+    $.post('/api/users/', '{"username": "' + username + '", "email": "' + email + '",  "password": "' + password + '"}',
         function (data) {
             window.location = '/';
         }).fail(function (response) {
