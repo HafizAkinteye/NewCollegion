@@ -8,4 +8,11 @@ class ChatRoomMessageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = GroupMessage
-        fields = ['sender', 'chat_room', 'message', 'timestamp']
+        fields = ['sender', 'chat_room', 'message', 'timestamp', 'anonymous', 'display_name']
+
+
+class GetChatRoomMessageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = GroupMessage
+        fields = ['display_name', 'chat_room', 'message', 'timestamp', 'anonymous']
