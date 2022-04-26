@@ -50,12 +50,6 @@ def user_list(request, pk=None):
     elif request.method == 'POST':
         data = JSONParser().parse(request)
         try:
-            user = User.objects.create_user(username=data['username'], password=data['password'])
-            initial = randint(100, 999)
-            user.profile.anonymous_name = "Anonymous"+str(initial)+str(user.id)
-            user.save()
-            user.is_active = False
-
             email_subject = 'Account verification needed'
             email_body = 'Test body'
             email = EmailMessage(
@@ -98,8 +92,8 @@ def user_list(request, pk=None):
 
 
             return JsonResponse(data, status=201)
-        except Exception:
-            return JsonResponse({'error': "Something went wrong"}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': f"Something went wrong: {e}"}, status=400)
 
 
 @csrf_exempt
