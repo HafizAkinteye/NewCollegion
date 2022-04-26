@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'Collegion_Backend',
     'chat_room',
-    #'verify_email.apps.VerfiyEmailConfig',
+    'verify_email.apps.VerifyEmailConfig',
 ]
 
 MIDDLEWARE = [

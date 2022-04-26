@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from tkinter.tix import Form
-from django.contrib.auth import authenticate, login #Django's inbuilt authentication methods
+import email
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User                                # Django Build in User Model
 from django.http.response import JsonResponse
@@ -12,8 +12,11 @@ from django.http import HttpResponse
 from django.core.mail import EmailMessage
 from chat_room.models import ChatRoom
 from random import randint
-#from verify_email.email_handler import send_verification_email
+from django.core.mail import send_mail
+from django.conf import settings
+from verify_email.email_handler import send_verification_email
 import re
+
 
 def index(request):
     if request.user.is_authenticated:
@@ -67,6 +70,31 @@ def user_list(request, pk=None):
             
             #If the above function doesn't work, try this
             #email.send(fail_silently= False)
+            user = User.objects.create_user(username=data['username'], email = data['email'], password=data['password'])
+            user.save()
+            user.is_active = False
+
+            print("text")
+            print(user.email)
+
+            match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[edu]+)*(\.{2,4})$', user.email)
+            if match == None:
+                print('Email is not edu email') #change to show up on register.html and prevent the user to being created
+            else:
+                print('Email is an edu email')
+                print(user.email)
+                email_subject = 'Account verification needed'
+                email_body = 'Test body'
+                if user.is_valid():
+                    inactive_user = send_verification_email(request, user)
+                #send_mail(
+                #email_subject,
+                #email_body,
+                #'collegionapp@gmail.com',
+                #[user.email],
+                fail_silently=False,
+                #)
+
 
             return JsonResponse(data, status=201)
         except Exception:
@@ -95,11 +123,11 @@ def message_list(request, sender=None, receiver=None):
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
 
-
 def register_view(request):
     """
     Render registration template
     """
+    
     if request.user.is_authenticated:
         return redirect('chats')
     return render(request, 'chat/register.html', {})
