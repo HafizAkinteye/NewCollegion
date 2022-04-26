@@ -3,6 +3,7 @@ from tkinter.tix import Form
 import email
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User                                # Django Build in User Model
+from django.contrib.auth import authenticate, login #Django's inbuilt authentication methods
 from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
