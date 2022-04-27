@@ -66,12 +66,12 @@ def user_list(request, pk=None):
         else:
             print('Email is an edu email')
             print(user.email)
-            email_subject = 'Account verification needed'
-            email_body = 'Test body'
             print("we made it to x")
-            #if user.is_active():
-            #   inactive_user = send_verification_email(request, user)
+            #if user.is_valid():
+            #    inactive_user = send_verification_email(request, user)
             print("we made it to y")
+            email_subject = 'Account verification needed'
+            email_body = 'Heres the verification code: '
             send_mail(
             email_subject,
             email_body,
