@@ -37,24 +37,43 @@
         </div>
     </form>
     <script>
-    $(function () {
-        $('#register-form').on('submit', function (event) {
-            event.preventDefault();
-            var username = $('#id_username').val();
-            var email = $('#id_email').val();
-            if(username !== '')
-            {
-                var password = $('#id_password').val();
-                if(password !== '' && password === $('#id_password2').val()){
-                    register(username, email, password);
-                }
-                else{
-                    alert("The passwords doesn't match!");
-                }
-            }
-            else
-                alert("Please enter a valid username!");
-        })
+$(function () {
+    $('#register-form').on('submit', function (event)
+    {
+        event.preventDefault();
+        // Set variables
+        var username = $('#id_username').val();
+        var email = $('#id_email').val();
+        var password = $('#id_password').val();
+        let isEduEmail = /^[a-zA-Z0-9.!#$%&'*+=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[e][d][u](?:[e][d][u]{0,61}[a-zA-Z0-9])?)*$/;
+        let matchedEmail = isEduEmail.test(email);
+        // Implement guard clause for readability.
+        if(username === '')
+        {
+            return alert("Please enter a username.");
+        }
+        // Check if password is entered
+        if(password === '')
+        {
+            return alert("Please enter a valid password");
+        }
+        console.log(email)
+        console.log(password === $('#id_password2').val())
+        console.log(matchedEmail)
+        if(matchedEmail == false)
+        {
+            return alert("Please enter a valid email ending in .edu")
+        }
+        // Register user if passwords match
+        if(password === $('#id_password2').val())
+        {
+            register (username, email, password);
+        }
+        else
+        {
+            return alert("Please ensure your passwords are matching");
+        }
     })
+})
     </script>
 {% endblock %}
