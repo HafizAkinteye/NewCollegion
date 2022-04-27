@@ -49,53 +49,40 @@ def user_list(request, pk=None):
 
     elif request.method == 'POST':
         data = JSONParser().parse(request)
-        try:
+        #try:
+        user = User.objects.create_user(username=data['username'], email = data['email'], password=data['password'])
+        random_int = randint(100, 999)
+        user.profile.anonymous_name = "Anonymous"+str(random_int)+str(user.id)
+        user.save()
+
+        user.is_active = False
+        print("user email")
+        print(user.email)
+
+        match = re.match('^[a-zA-Z0-9.!#$%&\'*+=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[e][d][u](?:[e][d][u]{0,61}[a-zA-Z0-9])?)*$', user.email)
+        print(match)
+        if match == None:
+            print('Email is not edu email') #change to show up on register.html and prevent the user to being created
+        else:
+            print('Email is an edu email')
+            print(user.email)
+            print("we made it to x")
+            #if user.is_valid():
+            #    inactive_user = send_verification_email(request, user)
+            print("we made it to y")
             email_subject = 'Account verification needed'
-            email_body = 'Test body'
-            email = EmailMessage(
-                email_subject,
-                email_body,
-                'noreply@collegion.com'
-                'saifrock619@gmail.com'
+            email_body = 'Heres the verification code: '
+            send_mail(
+            email_subject,
+            email_body,
+            'collegionapp@gmail.com',
+            [user.email],
+            fail_silently=False,
             )
 
-            #For email verification:
-            #if email.is_valid():
-            #    inactive_user = send_verification_email(request, email)
-            
-            #If the above function doesn't work, try this
-            #email.send(fail_silently= False)
-            user = User.objects.create_user(username=data['username'], email = data['email'], password=data['password'])
-            random_int = randint(100, 999)
-            user.profile.anonymous_name = "Anonymous"+str(random_int)+str(user.id)
-            user.save()
-
-            user.is_active = False
-            print("text")
-            print(user.email)
-
-            match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[edu]+)*(\.{2,4})$', user.email)
-            if match == None:
-                print('Email is not edu email') #change to show up on register.html and prevent the user to being created
-            else:
-                print('Email is an edu email')
-                print(user.email)
-                email_subject = 'Account verification needed'
-                email_body = 'Test body'
-                if user.is_valid():
-                    inactive_user = send_verification_email(request, user)
-                #send_mail(
-                #email_subject,
-                #email_body,
-                #'collegionapp@gmail.com',
-                #[user.email],
-                fail_silently=False,
-                #)
-
-
-            return JsonResponse(data, status=201)
-        except Exception as e:
-            return JsonResponse({'error': f"Something went wrong: {e}"}, status=400)
+        return JsonResponse(data, status=201)
+        #except Exception as e:
+            #return JsonResponse({'error': "Something went wrong: {e}"}, status=400)
 
 
 @csrf_exempt
