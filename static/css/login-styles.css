@@ -36,18 +36,24 @@
 
 }
 
+.chatroom {
+  display: flex;
+  justify-content: space-between;
+}
+
+.chatroom.collection {
+  overflow: visible;
+}
+
 .group-chat-label{
 margin-left: 1vw;
 }
 
 .group-add{
-    margin-right: 2vw;
-    margin-top: 20px;
+    line-height: 1.5;
 }
 .person_add_alt{
-  margin-right: 2vw;
-  margin-top: 20px;
-
+  line-height: 1.5;
 }
 
 .dmheader{
@@ -57,7 +63,14 @@ justify-content: space-between;
 /* Tooltip container */
 .tooltip {
   position: relative;
-  display: inline-block;
+}
+
+.tooltip-container {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  height: auto;
+  margin-right: 1vw;
 }
 
 .chat_title{
@@ -102,4 +115,8 @@ justify-content: space-between;
 .tooltip:hover .tooltiptext {
   visibility: visible;
   opacity: 1;
+}
+
+.user-list p {
+  display: inline-block
 }

@@ -17,7 +17,8 @@ from django.core.mail import send_mail
 from django.conf import settings
 from verify_email.email_handler import send_verification_email
 import re
-
+from .forms import UserRegistrationForm
+from django.contrib.auth.hashers import make_password
 
 def index(request):
     if request.user.is_authenticated:
@@ -50,47 +51,16 @@ def user_list(request, pk=None):
     elif request.method == 'POST':
         data = JSONParser().parse(request)
         try:
-            email_subject = 'Account verification needed'
-            email_body = 'Test body'
-            email = EmailMessage(
-                email_subject,
-                email_body,
-                'noreply@collegion.com'
-                'saifrock619@gmail.com'
-            )
+            data['password'] = make_password(data['password']) # Save hashed version of password
+            form = UserRegistrationForm(data)
 
-            #For email verification:
-            #if email.is_valid():
-            #    inactive_user = send_verification_email(request, email)
-            
-            #If the above function doesn't work, try this
-            #email.send(fail_silently= False)
-            user = User.objects.create_user(username=data['username'], email = data['email'], password=data['password'])
-            user.save()
-            user.is_active = False
-
-            print("text")
-            print(user.email)
-
-            match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[edu]+)*(\.{2,4})$', user.email)
+            match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[edu]+)*(\.{2,4})$', data['email'])
             if match == None:
                 print('Email is not edu email') #change to show up on register.html and prevent the user to being created
             else:
                 print('Email is an edu email')
-                print(user.email)
-                email_subject = 'Account verification needed'
-                email_body = 'Test body'
-                if user.is_valid():
-                    inactive_user = send_verification_email(request, user)
-                #send_mail(
-                #email_subject,
-                #email_body,
-                #'collegionapp@gmail.com',
-                #[user.email],
-                fail_silently=False,
-                #)
-
-
+                if form.is_valid():
+                    inactive_user = send_verification_email(request, form)
             return JsonResponse(data, status=201)
         except Exception as e:
             return JsonResponse({'error': f"Something went wrong: {e}"}, status=400)
@@ -125,7 +95,9 @@ def register_view(request):
     
     if request.user.is_authenticated:
         return redirect('chats')
-    return render(request, 'chat/register.html', {})
+    context = {}
+    context['form'] = UserRegistrationForm()
+    return render(request, 'chat/register.html', context)
 
 
 def chat_view(request):
@@ -187,12 +159,15 @@ def add_dm_user_form(request):
         query = request.POST.get("search")
         for user in users:
             if query in user.username and user not in dm_users \
+                    and re.search(regex, user.email) is not None \
                     and user_domain.group() == re.search(regex, user.email).group():
                 user_ls.append(user)
     else:
         user_ls = []
         for user in list(request.user.profile.dm_users.all()):
-            if not user in dm_users and user_domain.group() == re.search(regex, user.email).group():
+            if not user in dm_users \
+            and re.search(regex, user.email) is not None \
+            and user_domain.group() == re.search(regex, user.email).group():
                 user_ls.append(user)
 
     return render(request, "chat/add-dm.html",

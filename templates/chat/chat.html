@@ -16,7 +16,7 @@
         <div class="orange lighten-3 chatrooms">
 <!--            purple #800080-->
             <h4 class="group-chat-label" style="color:#800080;">Chatrooms</h4>
-            <div>
+            <div class="tooltip-container">
                 <div class="tooltip">
                     {% if request.user.profile.is_anonymous %}
                         <span class="tooltiptext">Anonymous Off</span>
@@ -50,27 +50,34 @@
                 </div>
             </div>
         </div>
-        <div id="chatroom" class="collection">
+        <div class="chatroom collection">
             {% for room in chatroom %}
-            <a href="{% url 'chat_room:message-chatrooms' room.id %}" id="chat_room${room.id}" class="collection-item row">
-
-                <div class="col s10 chatrooms">
-                <!--  <img src="https://frontend-1.adjust.com/new-assets/images/site-images/interface/user.svg" class="col s2"> -->
+                <a href="{% url 'chat_room:message-chatrooms' room.id %}" id="chat_room{{room.id}}" class="collection-item row">
                     <span class="title" style="font-weight: bolder">{{ room.name }}</span>
-                    <a href="{% url 'chat_room:add-to-group' room.id %}" class="material-icons person_add_alt" style="color:#006ee6;">
-                        person_add_alt
-                    </a>
-                </div>
-            </a>
+                </a>
+                <div class="chatrooms">
+                    <div class="tooltip-container">
+                        <div class="tooltip">
+                            <span class="tooltiptext">Add User to Group</span>
+                            <a href="{% url 'chat_room:add-to-group' room.id %}" class="material-icons person_add_alt" style="color:#006ee6;">
+                                person_add_alt
+                            </a>
+                        </div>
+                    </div>
+                    <!--  <img src="https://frontend-1.adjust.com/new-assets/images/site-images/interface/user.svg" class="col s2"> -->
+                        
+                    </div>
             {% endfor %}
         </div>
         <div class="orange lighten-3 chatrooms">
             <h4 class="group-chat-label" style="color:#800080;">Direct Message</h4>
-            <div class="tooltip">
-                <span class="tooltiptext">Add User to List</span>
-                <a href="{% url 'Collegion_Backend:add-dm-user-form' %}" class="material-icons group-add" style="color:#006ee6;">
-                    person_add_alt
-                </a>
+            <div class="tooltip-container">
+                <div class="tooltip">
+                    <span class="tooltiptext">Add User to List</span>
+                    <a href="{% url 'Collegion_Backend:add-dm-user-form' %}" class="material-icons group-add" style="color:#006ee6;">
+                        person_add_alt
+                    </a>
+                </div>
             </div>
         </div>
         <div id="dms" class="collection">
@@ -95,17 +102,19 @@
             <div class="dmheader blue lighten-4">
                 <span class="title" style="font-weight: bolder; margin-left: 1vw; font-size: 20px; color:#800080">{{group_name}}</span>
                 <div class="pull-right" style="margin-right:1vw;">
-                    <div class="tooltip">
-                        <span class="tooltiptext">Add Member</span>
-                        <a href="{% url 'chat_room:add-to-group' chatroom_id %}" class="material-icons" style="color:#006ee6;">
-                            person_add_alt
-                        </a>
-                    </div>
-                    <div class="tooltip">
-                        <span class="tooltiptext">Leave Group</span>
-                        <a href="{% url 'chat_room:remove-from-group' chatroom_id %}" class="material-icons" style="color:#006ee6;">
-                            delete
-                        </a>
+                    <div class="tooltip-container">
+                        <div class="tooltip">
+                            <span class="tooltiptext">Add Member</span>
+                            <a href="{% url 'chat_room:add-to-group' chatroom_id %}" class="material-icons" style="color:#006ee6;">
+                                person_add_alt
+                            </a>
+                        </div>
+                        <div class="tooltip">
+                            <span class="tooltiptext">Leave Group</span>
+                            <a href="{% url 'chat_room:remove-from-group' chatroom_id %}" class="material-icons" style="color:#006ee6;">
+                                delete
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

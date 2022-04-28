@@ -21,6 +21,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.views import LogoutView
 from Collegion import settings
 from chat_room.views import get_messages, send_messages
+from django.contrib.auth import views as auth_views
 
 
 urlpatterns = [
@@ -28,6 +29,7 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(next_page=settings.LOGOUT_REDIRECT_URL), name='logout'),
     #path('logout/', logout,  name='logout'),
     path('', views.index, name='index'),
+    path('', views.index, name='/accounts/login/'),
     path('register/', views.register_view, name='register'),
     path('chat/', include('Collegion_Backend.urls')),
      # URL form : "/api/messages/1/2"
@@ -41,5 +43,4 @@ urlpatterns = [
     path('api/messages/<int:chatroom_id>/', get_messages, name='chat-room-messages'),
     path('api/chat-room/send-messages/', send_messages, name='chat-room-send=messages'),
     path('verification/', include('verify_email.urls')),
-
 ]
