@@ -31,13 +31,16 @@ def add_user_form(request, group_id):
         users = list(User.objects.all())
         query = request.POST.get("search")
         for user in users:
-            if query in user.username and user not in group_chat.member.all()\
+            if query in user.username and user not in group_chat.member.all() \
+                    and re.search(regex, user.email) is not None \
                     and user_domain.group() == re.search(regex, user.email).group():
                 user_ls.append(user)
     else:
         user_ls = []
         for user in list(request.user.profile.dm_users.all()):
-            if not user in group_chat.member.all() and user_domain.group() == re.search(regex, user.email).group():
+            if not user in group_chat.member.all() \
+                and re.search(regex, user.email) is not None \
+                and user_domain.group() == re.search(regex, user.email).group():
                 user_ls.append(user)
 
     return render(request, "chat/add-to-group.html",

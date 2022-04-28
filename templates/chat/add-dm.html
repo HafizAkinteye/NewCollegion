@@ -9,12 +9,8 @@
        </div>
        {% for user in search_users %}
          <a href="/chat/dm-add/{{user.id}}/" id="user_card">
-             <li class="list-group-item list-group-item-action">
-             <div class="row">
-             <div class="col">
-                 <div class="row"><p>@{{user.username}}</p></div>
-             </div>
-             </div>
+             <li class="list-group-item list-group-item-action user-list">
+                <p>@{{user.username}}</p>
              </li>
          </a>
       {% endfor %}

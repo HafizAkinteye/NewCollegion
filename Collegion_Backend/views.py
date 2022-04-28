@@ -17,7 +17,8 @@ from django.core.mail import send_mail
 from django.conf import settings
 from verify_email.email_handler import send_verification_email
 import re
-
+from .forms import UserRegistrationForm
+from django.contrib.auth.hashers import make_password
 
 def index(request):
     if request.user.is_authenticated:
@@ -28,6 +29,9 @@ def index(request):
         username, password = request.POST['username'], request.POST['password']
         user = authenticate(username=username, password=password)
         if user is not None:
+            random_int = randint(100, 999)
+            user.profile.anonymous_name = "Anonymous"+str(random_int)+str(user.id)
+            user.save()
             login(request, user)
         else:
             return HttpResponse(render(request, 'chat/index.html', {"error": "Password or Username was incorrect"}))
@@ -49,40 +53,20 @@ def user_list(request, pk=None):
 
     elif request.method == 'POST':
         data = JSONParser().parse(request)
-        #try:
-        user = User.objects.create_user(username=data['username'], email = data['email'], password=data['password'])
-        random_int = randint(100, 999)
-        user.profile.anonymous_name = "Anonymous"+str(random_int)+str(user.id)
-        user.save()
+        try:
+            data['password'] = make_password(data['password']) # Save hashed version of password
+            form = UserRegistrationForm(data)
 
-        user.is_active = False
-        print("user email")
-        print(user.email)
-
-        match = re.match('^[a-zA-Z0-9.!#$%&\'*+=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[e][d][u](?:[e][d][u]{0,61}[a-zA-Z0-9])?)*$', user.email)
-        print(match)
-        if match == None:
-            print('Email is not edu email') #change to show up on register.html and prevent the user to being created
-        else:
-            print('Email is an edu email')
-            print(user.email)
-            print("we made it to x")
-            #if user.is_valid():
-            #    inactive_user = send_verification_email(request, user)
-            print("we made it to y")
-            email_subject = 'Account verification needed'
-            email_body = 'Heres the verification code: '
-            send_mail(
-            email_subject,
-            email_body,
-            'collegionapp@gmail.com',
-            [user.email],
-            fail_silently=False,
-            )
-
-        return JsonResponse(data, status=201)
-        #except Exception as e:
-            #return JsonResponse({'error': "Something went wrong: {e}"}, status=400)
+            match = re.match('^[a-zA-Z0-9.!#$%&\'*+=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[e][d][u](?:[e][d][u]{0,61}[a-zA-Z0-9])?)*$', data['email'])
+            if match == None:
+                print('Email is not edu email') #change to show up on register.html and prevent the user to being created
+            else:
+                print('Email is an edu email')
+                if form.is_valid():
+                    inactive_user = send_verification_email(request, form)
+            return JsonResponse(data, status=201)
+        except Exception as e:
+            return JsonResponse({'error': f"Something went wrong: {e}"}, status=400)
 
 
 @csrf_exempt
@@ -114,7 +98,9 @@ def register_view(request):
     
     if request.user.is_authenticated:
         return redirect('chats')
-    return render(request, 'chat/register.html', {})
+    context = {}
+    context['form'] = UserRegistrationForm()
+    return render(request, 'chat/register.html', context)
 
 
 def chat_view(request):
@@ -176,12 +162,15 @@ def add_dm_user_form(request):
         query = request.POST.get("search")
         for user in users:
             if query in user.username and user not in dm_users \
+                    and re.search(regex, user.email) is not None \
                     and user_domain.group() == re.search(regex, user.email).group():
                 user_ls.append(user)
     else:
         user_ls = []
         for user in list(request.user.profile.dm_users.all()):
-            if not user in dm_users and user_domain.group() == re.search(regex, user.email).group():
+            if not user in dm_users \
+            and re.search(regex, user.email) is not None \
+            and user_domain.group() == re.search(regex, user.email).group():
                 user_ls.append(user)
 
     return render(request, "chat/add-dm.html",
