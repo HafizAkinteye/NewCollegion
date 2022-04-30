@@ -1,21 +1,21 @@
 {% extends 'chat/index.html' %}
 {% block body %}
-<nav class="blue lighten-3">
+<nav class="background-title">
     <div class="nav-wrapper container">
-      <a href="" class="brand-logo">Collegion</a>
+      <a href="" class="brand-logo" style="color:#6ca9e6;">Collegion</a>
       <ul id="nav-mobile" class="right">
-          <li><a href="">{{ request.user.username }}</a></li>
-          <li><a href="{% url 'logout' %}"><i class="material-icons">power_settings_new</i></a></li>
+          <li><a href="" style="color:#6ca9e6;">{{ request.user.username }}</a></li>
+          <li><a href="{% url 'logout' %}" style="color:#6ca9e6;"><i class="material-icons">power_settings_new</i></a></li>
       </ul>
     </div>
 </nav>
 <div class="section" style="height: 80vh">
 <div class="row">
     <div class="col s3">
-    <div class="card">
-        <div class="orange lighten-3 chatrooms">
+    <div class="card background-title">
+        <div class="background-title chatrooms">
 <!--            purple #800080-->
-            <h4 class="group-chat-label" style="color:#800080;">Chatrooms</h4>
+            <h5 class="group-chat-label text-color">Chatrooms</h5>
             <div class="tooltip-container">
                 <div class="tooltip">
                     {% if request.user.profile.is_anonymous %}
@@ -44,48 +44,47 @@
                 </div>
                 <div class="tooltip">
                     <span class="tooltiptext">Create Group Chat</span>
-                    <a href="{% url 'chat_room:create-chatroom' %}" class="material-icons group-add" style="color:#006ee6;">
+                    <a href="{% url 'chat_room:create-chatroom' %}" class="material-icons group-add button-color">
                         group_add
                     </a>
                 </div>
             </div>
         </div>
-        <div class="chatroom collection">
+        <div class="collection background-collection" style="border-color:#2c2f33;">
             {% for room in chatroom %}
-                <a href="{% url 'chat_room:message-chatrooms' room.id %}" id="chat_room{{room.id}}" class="collection-item row">
-                    <span class="title" style="font-weight: bolder">{{ room.name }}</span>
-                </a>
-                <div class="chatrooms">
+                <div class="collection-item chatrooms" style="padding:0; background-color:#35393d; color:#2c2f33; border-bottom:3px; border-style:solid;">
+                    <a href="{% url 'chat_room:message-chatrooms' room.id %}" id="chat_room{{room.id}}" class="background-collection" style="background-color:#35393d; width:500px; border:none;">
+                        <span class="title names" style="font-weight: bolder; color:#c1c9d6;">{{ room.name }}</span>
+                    </a>
                     <div class="tooltip-container">
                         <div class="tooltip">
                             <span class="tooltiptext">Add User to Group</span>
-                            <a href="{% url 'chat_room:add-to-group' room.id %}" class="material-icons person_add_alt" style="color:#006ee6;">
+                            <a href="{% url 'chat_room:add-to-group' room.id %}" class="material-icons person_add_alt button-color">
                                 person_add_alt
                             </a>
                         </div>
                     </div>
+                </div>
                     <!--  <img src="https://frontend-1.adjust.com/new-assets/images/site-images/interface/user.svg" class="col s2"> -->
-                        
-                    </div>
             {% endfor %}
         </div>
-        <div class="orange lighten-3 chatrooms">
-            <h4 class="group-chat-label" style="color:#800080;">Direct Message</h4>
+        <div class="background-title chatrooms">
+            <h5 class="group-chat-label text-color">Direct Message</h5>
             <div class="tooltip-container">
                 <div class="tooltip">
                     <span class="tooltiptext">Add User to List</span>
-                    <a href="{% url 'Collegion_Backend:add-dm-user-form' %}" class="material-icons group-add" style="color:#006ee6;">
+                    <a href="{% url 'Collegion_Backend:add-dm-user-form' %}" class="material-icons group-add button-color">
                         person_add_alt
                     </a>
                 </div>
             </div>
         </div>
-        <div id="dms" class="collection">
+        <div id="dms" class="collection" style="border-color:#2c2f33;">
             {% for dm in direct_messages %}
-            <a href="/chat/{{request.user.id}}/{{dm.id}}/" id="user${receiverId}" class="collection-item row">
+            <a href="/chat/{{request.user.id}}/{{dm.id}}/" id="user${receiverId}" class="collection-item row" style="background-color:#35393d; color:#2c2f33; border-bottom:3px; border-style:solid;">
 <!--                <img src="https://frontend-1.adjust.com/new-assets/images/site-images/interface/user.svg" class="col s2">-->
                 <div class="col s10">
-                <span class="title" style="font-weight: bolder">{{ dm.username }}</span>
+                <span class="title" style="font-weight: bolder; color:#c1c9d6;">{{ dm.username }}</span>
                 </div>
             </a>
             {% endfor %}
@@ -95,23 +94,23 @@
     <div class="col s9">
         <div class="card">
             {% if sender %}
-            <div class="dmheader blue lighten-4">
+            <div class="dmheader background-title">
                 <span class="title" style="font-weight: bolder; margin-left: 1vw; font-size: 20px; color:#800080">{{sender}}</span>
             </div>
             {% elif group_name %}
-            <div class="dmheader blue lighten-4">
-                <span class="title" style="font-weight: bolder; margin-left: 1vw; font-size: 20px; color:#800080">{{group_name}}</span>
+            <div class="dmheader background-title">
+                <span class="title text-color" style="font-weight: bolder; margin-left: 1vw; font-size: 20px;">{{group_name}}</span>
                 <div class="pull-right" style="margin-right:1vw;">
                     <div class="tooltip-container">
                         <div class="tooltip">
                             <span class="tooltiptext">Add Member</span>
-                            <a href="{% url 'chat_room:add-to-group' chatroom_id %}" class="material-icons" style="color:#006ee6;">
+                            <a href="{% url 'chat_room:add-to-group' chatroom_id %}" class="material-icons button-color">
                                 person_add_alt
                             </a>
                         </div>
                         <div class="tooltip">
                             <span class="tooltiptext">Leave Group</span>
-                            <a href="{% url 'chat_room:remove-from-group' chatroom_id %}" class="material-icons" style="color:#006ee6;">
+                            <a href="{% url 'chat_room:remove-from-group' chatroom_id %}" class="material-icons button-color">
                                 delete
                             </a>
                         </div>
@@ -119,7 +118,7 @@
                 </div>
             </div>
             {% endif %}
-        <div id="board" class="section grey lighten-3" style="height: 68vh; padding: 5px; overflow-y: scroll">
+        <div id="board" class="section background-collection scroller" style="height: 68vh; padding: 5px;">
 
             {% block content %}
 
@@ -128,14 +127,14 @@
         </div>
         <form id="chat-box" class="form-group {% block hide %}hide{% endblock %}" method="post">
             {% csrf_token %}
-            <div class="row">
+            <div class="row background-root">
                 <div class="col s11">
                     <div class="input-field">
-                        <input id="id_message" name="message" type="text" placeholder="Type your message..">
+                        <input id="id_message" style="color:#c1c9d6;" name="message" type="text" placeholder="Type your message..">
                     </div>
                 </div>
                 <div class="col s1" style="line-height: 80px">
-                    <button class="btn btn-floating blue lighten-2 waves-effect waves-light"><i class="material-icons">send</i></button>
+                    <button class="btn btn-floating waves-effect waves-light" style="background-color:#7289da; "><i class="material-icons">send</i></button>
                 </div>
             </div>
         </form>
