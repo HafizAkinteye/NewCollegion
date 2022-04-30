@@ -4,7 +4,7 @@
 
     <form method="post" id="create-chatroom-form" class="form-group">
         {% csrf_token %}
-        <h3 style="margin-right:2px">Create Chatroom</h3>
+        <h3 class="text-color" style="margin-right:2px">Create Chatroom</h3>
         {% if not error == ""%}
             <div class="row chatroom-err">
                 <p class="chatroom-err-msg">{{ error }}</p>
