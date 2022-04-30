@@ -134,8 +134,6 @@ justify-content: space-between;
 
 .background-collection{
     background-color:#35393d;
-    border-color:#2c2f33;
-    border-bottom: 3px solid
 }
 
 .names{
@@ -159,6 +157,21 @@ justify-content: space-between;
     color: #7289da;
 }
 
+input{
+    color: #c1c9d6;
+}
+
+h1, h2, h3, h4, h5{
+    color: #99aab5;
+}
+
+button{
+    background-color:#7289da !important;
+}
+
+p{
+    color:#c1c9d6;
+}
 a{
     margin: 0;
     padding: 0;

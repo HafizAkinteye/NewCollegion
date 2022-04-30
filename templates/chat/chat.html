@@ -94,31 +94,35 @@
     <div class="col s9">
         <div class="card">
             {% if sender %}
-            <div class="dmheader background-title">
-                <span class="title text-color" style="font-weight: bolder; margin-left: 1vw; font-size: 20px;">{{sender}}</span>
+            <div class="card background-title" style="margin:0px;">
+                <div class="dmheader background-title">
+                    <span class="title text-color" style="font-weight: bolder; margin-left: 1vw; font-size: 20px;">{{sender}}</span>
+                </div>
             </div>
             {% elif group_name %}
-            <div class="dmheader background-title">
-                <span class="title text-color" style="font-weight: bolder; margin-left: 1vw; font-size: 20px;">{{group_name}}</span>
-                <div class="pull-right" style="margin-right:1vw;">
-                    <div class="tooltip-container">
-                        <div class="tooltip">
-                            <span class="tooltiptext">Add Member</span>
-                            <a href="{% url 'chat_room:add-to-group' chatroom_id %}" class="material-icons button-color">
-                                person_add_alt
-                            </a>
-                        </div>
-                        <div class="tooltip">
-                            <span class="tooltiptext">Leave Group</span>
-                            <a href="{% url 'chat_room:remove-from-group' chatroom_id %}" class="material-icons button-color">
-                                delete
-                            </a>
+            <div class="card background-title" style="margin:0px;">
+                <div class="dmheader background-title">
+                    <span class="title text-color" style="font-weight: bolder; margin-left: 1vw; font-size: 20px;">{{group_name}}</span>
+                    <div class="pull-right" style="margin-right:1vw;">
+                        <div class="tooltip-container">
+                            <div class="tooltip">
+                                <span class="tooltiptext">Add Member</span>
+                                <a href="{% url 'chat_room:add-to-group' chatroom_id %}" class="material-icons button-color">
+                                    person_add_alt
+                                </a>
+                            </div>
+                            <div class="tooltip">
+                                <span class="tooltiptext">Leave Group</span>
+                                <a href="{% url 'chat_room:remove-from-group' chatroom_id %}" class="material-icons button-color">
+                                    delete
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             {% endif %}
-        <div id="board" class="section background-collection scroller" style="height: 68vh; padding: 5px;">
+        <div id="board" class="section background-title scroller" style="height: 68vh; padding: 5px;">
 
             {% block content %}
 
@@ -130,11 +134,11 @@
             <div class="row background-root">
                 <div class="col s11">
                     <div class="input-field">
-                        <input id="id_message" style="color:#c1c9d6;" name="message" type="text" placeholder="Type your message..">
+                        <input id="id_message" style="color:#c1c9d6;" name="message" type="text" placeholder="Type your message...">
                     </div>
                 </div>
                 <div class="col s1" style="line-height: 80px">
-                    <button class="btn btn-floating waves-effect waves-light" style="background-color:#7289da; "><i class="material-icons">send</i></button>
+                    <button class="btn btn-floating waves-effect waves-light" style="background-color:#7289da;"><i class="material-icons">send</i></button>
                 </div>
             </div>
         </form>
