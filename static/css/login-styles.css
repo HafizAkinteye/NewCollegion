@@ -10,6 +10,9 @@
     background: #FF0000;
 }
 
+:root {
+    color-scheme: dark;
+}
 .error-msg{
     margin: 0.75vh auto 0.75vh auto;
 }
@@ -119,4 +122,57 @@ justify-content: space-between;
 
 .user-list p {
   display: inline-block
+}
+
+.background-title{
+    background-color:#2c2f33;
+}
+
+.background-root{
+    background-color:#23272a;
+}
+
+.background-collection{
+    background-color:#35393d;
+}
+
+.names{
+    position: relative;
+    margin-left: 15px;
+    top: 8px;
+    left: 20px;
+    color: #99aab5;
+}
+
+.text-color{
+    color: #99aab5;
+}
+
+.scroller {
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: dark;
+}
+.button-color{
+    color: #7289da;
+}
+
+input{
+    color: #c1c9d6;
+}
+
+h1, h2, h3, h4, h5{
+    color: #99aab5;
+}
+
+button{
+    background-color:#7289da !important;
+}
+
+p{
+    color:#c1c9d6;
+}
+a{
+    margin: 0;
+    padding: 0;
 }
