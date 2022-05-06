@@ -52,7 +52,7 @@
         </div>
         <div class="collection background-collection" style="border-color:#2c2f33;">
             {% for room in chatroom %}
-                <div class="collection-item chatrooms" style="padding:0; background-color:#35393d; color:#2c2f33; border-bottom:3px; border-style:solid;">
+                <div class="collection-item chatroom" style="padding:0; background-color:#35393d; color:#2c2f33; border-bottom:3px; border-style:solid;">
                     <a href="{% url 'chat_room:message-chatrooms' room.id %}" id="chat_room{{room.id}}" class="background-collection" style="background-color:#35393d; width:500px; border:none;">
                         <span class="title names" style="font-weight: bolder; color:#c1c9d6;">{{ room.name }}</span>
                     </a>
