@@ -17,6 +17,7 @@ function send(sender, receiver, message) {
     $.post('/api/messages/', '{"sender": "' + sender + '", "receiver": "' + receiver + '","message": "' + message + '" }', function (data) {
         var box = text_box.replace('{sender}', "You");
         box = box.replace('{message}', message);
+        box = box.replace('relative;', 'relative; background-color:#404ca1;')
         $('#board').append(box);
         scrolltoend();
     })
