@@ -35,8 +35,12 @@
 
 .chatrooms{
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
+}
 
+.x-scroll{
+    overflow-x: auto;
 }
 
 .chatroom {
