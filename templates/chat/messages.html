@@ -5,12 +5,12 @@
     {% for message in messages %}
         {% if message.anonymous %}
             {% if message.sender == request.user %}
-            <div class="card-panel right left" style="width: 75%; position: relative; background-color:#404ca1;">
+            <div class="card-panel right" style="width: 75%; position: relative; background-color:#404ca1;">
                 <div style="position: absolute; top: 0; left:3px; font-weight: bolder;" class="title text-color">{{ request.user.profile.anonymous_name }}</div>
                 <span style="color:#c1c9d6;;">{{ message }}</span>
             </div>
             {% else %}
-            <div class="card-panel background-collection " style="width: 75%; position: relative">
+            <div class="card-panel left background-collection " style="width: 75%; position: relative">
                 <div style="position: absolute; top: 0; left:3px; font-weight: bolder" class="title text-color">{{ message.sender.profile.anonymous_name }}</div>
                 <span style="color:#c1c9d6;">{{ message }}</span>
             </div>
