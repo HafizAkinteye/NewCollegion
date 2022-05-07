@@ -29,9 +29,6 @@ def index(request):
         username, password = request.POST['username'], request.POST['password']
         user = authenticate(username=username, password=password)
         if user is not None:
-            random_int = randint(100, 999)
-            user.profile.anonymous_name = "Anonymous"+str(random_int)+str(user.id)
-            user.save()
             login(request, user)
         else:
             return HttpResponse(render(request, 'chat/index.html', {"error": "Password or Username was incorrect"}))
@@ -64,6 +61,10 @@ def user_list(request, pk=None):
                 print('Email is an edu email')
                 if form.is_valid():
                     inactive_user = send_verification_email(request, form)
+                    user = User.objects.get(username=inactive_user)
+                    random_int = randint(100, 999)
+                    user.profile.anonymous_name = "Anonymous" + str(random_int) + str(user.id)
+                    user.save()
             return JsonResponse(data, status=201)
         except Exception as e:
             return JsonResponse({'error': f"Something went wrong: {e}"}, status=400)
